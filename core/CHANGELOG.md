@@ -1,4 +1,4 @@
-## Spree 2.1.0 (unreleased) ##
+## Spree 2.1.0 ##
 
 * Product requires `shipping_category_id` on create #3188.
 
@@ -90,5 +90,9 @@ See #3133 for more information.
     *Ruben Ascencio*
 
 * Tax categories are now stored on line items. This should make tax calculations slightly faster. #3481
+
+    *Ryan Bigg*
+
+* `update_attribute(s)_without_callbacks` have gone away, in favour of `update_column(s)`
 
     *Ryan Bigg*

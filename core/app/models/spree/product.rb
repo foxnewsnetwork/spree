@@ -84,11 +84,6 @@ module Spree
 
     before_destroy :punch_permalink
 
-    def variants_with_only_master
-      ActiveSupport::Deprecation.warn("[SPREE] Spree::Product#variants_with_only_master will be deprecated in Spree 1.3. Please use Spree::Product#master instead.")
-      master
-    end
-
     def to_param
       permalink.present? ? permalink : (permalink_was || name.to_s.to_url)
     end
@@ -147,8 +142,11 @@ module Spree
     end
 
     def self.like_any(fields, values)
-      where_str = fields.map { |field| Array.new(values.size, "#{self.quoted_table_name}.#{field} #{LIKE} ?").join(' OR ') }.join(' OR ')
-      self.where([where_str, values.map { |value| "%#{value}%" } * fields.size].flatten)
+      where fields.map { |field|
+        values.map { |value|
+          arel_table[field].matches("%#{value}%")
+        }.inject(:or)
+      }.inject(:or)
     end
 
     # Suitable for displaying only variants that has at least one option value.

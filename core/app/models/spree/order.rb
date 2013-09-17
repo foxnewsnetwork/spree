@@ -39,7 +39,7 @@ module Spree
     has_many :line_items, -> { order('created_at ASC') }, dependent: :destroy
     has_many :payments, dependent: :destroy
     has_many :return_authorizations, dependent: :destroy
-    has_many :adjustments, -> { order('created_at ASC') }, as: :adjustable, dependent: :destroy
+    has_many :adjustments, -> { order("#{Adjustment.table_name}.created_at ASC") }, as: :adjustable, dependent: :destroy
     has_many :line_item_adjustments, through: :line_items, source: :adjustments
 
     has_many :shipments, dependent: :destroy do
@@ -174,8 +174,7 @@ module Spree
     # Returns the relevant zone (if any) to be used for taxation purposes.
     # Uses default tax zone unless there is a specific match
     def tax_zone
-      zone_address = Spree::Config[:tax_using_ship_address] ? ship_address : bill_address
-      Zone.match(zone_address) || Zone.default_tax
+      Zone.match(tax_address) || Zone.default_tax
     end
 
     # Indicates whether tax should be backed out of the price calcualtions in
@@ -186,9 +185,9 @@ module Spree
       return tax_zone != Zone.default_tax
     end
 
-    def price_adjustments
-      ActiveSupport::Deprecation.warn("Order#price_adjustments will be deprecated in Spree 2.1, please use Order#line_item_adjustments instead.")
-      self.line_item_adjustments
+    # Returns the address for taxation based on configuration
+    def tax_address
+      Spree::Config[:tax_using_ship_address] ? ship_address : bill_address
     end
 
     # Array of totals grouped by Adjustment#label. Useful for displaying line item
@@ -199,11 +198,6 @@ module Spree
         total = adjustments.sum(&:amount)
         [label, Spree::Money.new(total, { currency: currency })]
       end]
-    end
-
-    def price_adjustment_totals
-      ActiveSupport::Deprecation.warn("Order#price_adjustment_totals will be deprecated in Spree 2.1, please use Order#line_item_adjustment_totals instead.")
-      self.line_item_adjustment_totals
     end
 
     def updater
@@ -494,6 +488,7 @@ module Spree
     end
 
     def create_proposed_shipments
+      adjustments.shipping.delete_all
       shipments.destroy_all
 
       packages = Spree::Stock::Coordinator.new(self).packages
@@ -514,6 +509,10 @@ module Spree
         self.shipments.destroy_all
         self.update_column(:state, "address")
       end
+    end
+
+    def refresh_shipment_rates
+      shipments.map &:refresh_rates
     end
 
     private
