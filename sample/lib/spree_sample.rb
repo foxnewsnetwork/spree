@@ -12,7 +12,8 @@ module SpreeSample
       Spree::Sample.load_sample("shipping_methods")
       Spree::Sample.load_sample("tax_categories")
       Spree::Sample.load_sample("tax_rates")
-
+      Spree::Sample.load_sample("users")
+      Spree::Sample.load_sample("shops")
       Spree::Sample.load_sample("products")
       Spree::Sample.load_sample("taxons")
       Spree::Sample.load_sample("option_values")

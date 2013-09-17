@@ -1,6 +1,12 @@
 module Spree
   class Price < ActiveRecord::Base
     belongs_to :variant, class_name: 'Spree::Variant'
+    has_one :transportation_price, 
+      :class_name => "Spree::TransportationPrice",
+      :dependent => :destroy
+    has_one :destination,
+      :class_name => "Spree::Address"
+      :through => :transportation_price
 
     validate :check_price
     validates :amount, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
@@ -12,6 +18,10 @@ module Spree
 
     def money
       Spree::Money.new(amount || 0, { currency: currency })
+    end
+
+    def terms
+      transportation_price.try(:terms)
     end
 
     def price

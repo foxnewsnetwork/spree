@@ -32,6 +32,7 @@ module Spree
 
     belongs_to :tax_category, class_name: 'Spree::TaxCategory'
     belongs_to :shipping_category, class_name: 'Spree::ShippingCategory'
+    belongs_to :shop, :class_name => "Spree::Shop"
 
     has_one :master,
       -> { where is_master: true },

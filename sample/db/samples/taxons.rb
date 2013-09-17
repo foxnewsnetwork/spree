@@ -1,6 +1,7 @@
 Spree::Sample.load_sample("taxonomies")
 Spree::Sample.load_sample("products")
 
+
 categories = Spree::Taxonomy.find_by_name!("Categories")
 brands = Spree::Taxonomy.find_by_name!("Brand")
 
