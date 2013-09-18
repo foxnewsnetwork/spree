@@ -101,7 +101,7 @@ taxons = [
     :name => "Thomas Chen Co.",
     :taxonomy => companies,
     :parent => "companies",
-    :products => products 
+    :products => products.to_a.map { |a| a.last } 
   },
   {
     :name => "ML Resources Inc.",
@@ -123,6 +123,7 @@ taxons = [
 taxons.each do |taxon_attrs|
   if taxon_attrs[:parent]
     taxon_attrs[:parent] = Spree::Taxon.find_by_name!(taxon_attrs[:parent])
+    puts taxon_attrs
     Spree::Taxon.create!(taxon_attrs)
   end
 end
