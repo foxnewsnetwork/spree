@@ -90,6 +90,3 @@ variants = [
 
 Spree::Variant.create!(variants)
 
-masters.each do |product, variant_attrs|
-  product.master.update_attributes!(variant_attrs)
-end
