@@ -1,7 +1,7 @@
 Spree::Sample.load_sample("tax_categories")
 Spree::Sample.load_sample("shipping_categories")
 Spree::Sample.load_sample("users")
-Spree::Sample.load_sample("stores")
+Spree::Sample.load_sample("shops")
 
 business = Spree::TaxCategory.find_by_name!("International Trade")
 shipping_category = Spree::ShippingCategory.find_by_name!("Default Shipping")
