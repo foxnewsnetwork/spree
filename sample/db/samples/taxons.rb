@@ -5,15 +5,15 @@ materials = Spree::Taxonomy.find_by_name!("Materials")
 brands = Spree::Taxonomy.find_by_name!("Companies")
 
 products = { 
-  :pet_milk_jug => "PET Milk Jug"
-  :hdpe_foam => "HDPE Foam"
-  :pvk_film => "PVK Film"
-  :mixed_rigid_plastics => "Mixed Rigid Plastics"
-  :pvc_piping => "PVC Piping"
-  :ps_foam => "PS Foam"
-  :pp_regrind => "PP Regrind"
-  :ldpe_shopping_bags => "LDPE Shopping Bags"
-  :hdpe_shampoo_bottles => "HDPE Shampoo Bottles"
+  :pet_milk_jug => "PET Milk Jug",
+  :hdpe_foam => "HDPE Foam",
+  :pvk_film => "PVK Film",
+  :mixed_rigid_plastics => "Mixed Rigid Plastics",
+  :pvc_piping => "PVC Piping",
+  :ps_foam => "PS Foam",
+  :pp_regrind => "PP Regrind",
+  :ldpe_shopping_bags => "LDPE Shopping Bags",
+  :hdpe_shampoo_bottles => "HDPE Shampoo Bottles",
   :pla_bottles => "PLA bottles"
 }
 
