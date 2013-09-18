@@ -5,7 +5,6 @@ Spree::Sample.load_sample("stores")
 
 business = Spree::TaxCategory.find_by_name!("Business")
 shipping_category = Spree::ShippingCategory.find_by_name!("Default Shipping")
-
 default_attrs = {
   :description => Faker::Lorem.paragraph,
   :available_on => Time.zone.now
@@ -13,126 +12,73 @@ default_attrs = {
 
 products = [
   {
-    :name => "Ruby on Rails Tote",
+    :name => "PET Milk Jug",
     :tax_category => business,
     :shipping_category => shipping_category,
-    :price => 15.99,
-    :eur_price => 14,
+    :price => 0.015
   },
   {
-    :name => "Ruby on Rails Bag",
+    :name => "HDPE Foam",
     :tax_category => business,
     :shipping_category => shipping_category,
-    :price => 22.99,
-    :eur_price => 19,
+    :price => 0.01
   },
   {
-    :name => "Ruby on Rails Baseball Jersey",
+    :name => "PVK Film",
     :tax_category => business,
     :shipping_category => shipping_category,
-    :price => 19.99,
-    :eur_price => 16
+    :price => 0.025
   },
   {
-    :name => "Ruby on Rails Jr. Spaghetti",
+    :name => "Mixed Rigid Plastics",
     :tax_category => business,
     :shipping_category => shipping_category,
-    :price => 19.99,
-    :eur_price => 16
+    :price => 0.007
 
   },
   {
-    :name => "Ruby on Rails Ringer T-Shirt",
+    :name => "PVC Piping",
     :shipping_category => shipping_category,
     :tax_category => business,
-    :price => 19.99,
-    :eur_price => 16
+    :price => 0.008
   },
   {
-    :name => "Ruby Baseball Jersey",
+    :name => "PS Foam",
     :tax_category => business,
     :shipping_category => shipping_category,
-    :price => 19.99,
-    :eur_price => 16
+    :price => 0.011
   },
   {
-    :name => "Apache Baseball Jersey",
+    :name => "PP Regrind",
     :tax_category => business,
     :shipping_category => shipping_category,
-    :price => 19.99,
-    :eur_price => 16
+    :price => 0.021
   },
   {
-    :name => "Spree Baseball Jersey",
+    :name => "LDPE Shopping Bags",
     :tax_category => business,
     :shipping_category => shipping_category,
-    :price => 19.99,
-    :eur_price => 16
+    :price => 0.005
   },
   {
-    :name => "Spree Jr. Spaghetti",
+    :name => "HDPE Shampoo Bottles",
     :tax_category => business,
     :shipping_category => shipping_category,
-    :price => 19.99,
-    :eur_price => 16
+    :price => 0.018
   },
   {
-    :name => "Spree Ringer T-Shirt",
+    :name => "PLA bottles",
     :tax_category => business,
     :shipping_category => shipping_category,
-    :price => 19.99,
-    :eur_price => 16
-  },
-  {
-    :name => "Spree Tote",
-    :tax_category => business,
-    :shipping_category => shipping_category,
-    :price => 15.99,
-    :eur_price => 14,
-  },
-  {
-    :name => "Spree Bag",
-    :tax_category => business,
-    :shipping_category => shipping_category,
-    :price => 22.99,
-    :eur_price => 19
-  },
-  {
-    :name => "Ruby on Rails Mug",
-    :shipping_category => shipping_category,
-    :price => 13.99,
-    :eur_price => 12
-  },
-  {
-    :name => "Ruby on Rails Stein",
-    :shipping_category => shipping_category,
-    :price => 16.99,
-    :eur_price => 14
-  },
-  {
-    :name => "Spree Stein",
-    :shipping_category => shipping_category,
-    :price => 16.99,
-    :eur_price => 14,
-  },
-  {
-    :name => "Spree Mug",
-    :shipping_category => shipping_category,
-    :price => 13.99,
-    :eur_price => 12
+    :price => 0.023
   }
 ]
 
+shop = User.find_by_email!("dev@thomaschen.co").shop
 products.each do |product_attrs|
-  eur_price = product_attrs.delete(:eur_price)
   Spree::Config[:currency] = "USD"
-
   default_shipping_category = Spree::ShippingCategory.find_by_name!("Default Shipping")
-  product = Spree::Product.create!(default_attrs.merge(product_attrs))
-  Spree::Config[:currency] = "EUR"
-  product.reload
-  product.price = eur_price
-  product.shipping_category = default_shipping_category
+  product = shop.products.create! default_attrs.merge product_attrs
   product.save!
 end
 

@@ -1,32 +1,32 @@
 Spree::Sample.load_sample("option_types")
 
-size = Spree::OptionType.find_by_presentation!("Size")
+grade = Spree::OptionType.find_by_presentation!("Grade")
 color = Spree::OptionType.find_by_presentation!("Color")
 
 Spree::OptionValue.create!([
   {
-    :name => "Small",
-    :presentation => "S",
+    :name => "Grade A",
+    :presentation => "A",
     :position => 1,
-    :option_type => size
+    :option_type => grade
   },
   {
-    :name => "Medium",
-    :presentation => "M",
+    :name => "Grade B",
+    :presentation => "B",
     :position => 2,
-    :option_type => size
+    :option_type => grade
   },
   {
-    :name => "Large",
-    :presentation => "L",
+    :name => "Grade C",
+    :presentation => "C",
     :position => 3,
-    :option_type => size
+    :option_type => grade
   },
   {
-    :name => "Extra Large",
-    :presentation => "XL",
+    :name => "Grade D",
+    :presentation => "D",
     :position => 4,
-    :option_type => size
+    :option_type => grade
   },
   {
     :name => "Red",

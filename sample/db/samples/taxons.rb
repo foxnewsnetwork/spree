@@ -1,27 +1,20 @@
 Spree::Sample.load_sample("taxonomies")
 Spree::Sample.load_sample("products")
 
-
-categories = Spree::Taxonomy.find_by_name!("Categories")
-brands = Spree::Taxonomy.find_by_name!("Brand")
+materials = Spree::Taxonomy.find_by_name!("Materials")
+brands = Spree::Taxonomy.find_by_name!("Companies")
 
 products = { 
-  :ror_tote => "Ruby on Rails Tote",
-  :ror_bag => "Ruby on Rails Bag",
-  :ror_mug => "Ruby on Rails Mug",
-  :ror_stein => "Ruby on Rails Stein",
-  :ror_baseball_jersey => "Ruby on Rails Baseball Jersey",
-  :ror_jr_spaghetti => "Ruby on Rails Jr. Spaghetti",
-  :ror_ringer => "Ruby on Rails Ringer T-Shirt",
-  :spree_stein => "Spree Stein",
-  :spree_mug => "Spree Mug",
-  :spree_ringer => "Spree Ringer T-Shirt",
-  :spree_baseball_jersey =>  "Spree Baseball Jersey",
-  :spree_tote => "Spree Tote",
-  :spree_bag => "Spree Bag",
-  :spree_jr_spaghetti => "Spree Jr. Spaghetti",
-  :apache_baseball_jersey => "Apache Baseball Jersey",
-  :ruby_baseball_jersey => "Ruby Baseball Jersey",
+  :pet_milk_jug => "PET Milk Jug"
+  :hdpe_foam => "HDPE Foam"
+  :pvk_film => "PVK Film"
+  :mixed_rigid_plastics => "Mixed Rigid Plastics"
+  :pvc_piping => "PVC Piping"
+  :ps_foam => "PS Foam"
+  :pp_regrind => "PP Regrind"
+  :ldpe_shopping_bags => "LDPE Shopping Bags"
+  :hdpe_shampoo_bottles => "HDPE Shampoo Bottles"
+  :pla_bottles => "PLA bottles"
 }
 
 
@@ -31,86 +24,99 @@ end
 
 taxons = [
   {
-    :name => "Categories",
-    :taxonomy => categories,
+    :name => "Materials",
+    :taxonomy => materials,
     :position => 0
   },
   {
-    :name => "Bags",
-    :taxonomy => categories,
-    :parent => "Categories",
-    :position => 1,
-    :products => [
-      products[:ror_tote],
-      products[:ror_bag],
-      products[:spree_tote],
-      products[:spree_bag]
-    ]
-  },
-  {
-    :name => "Mugs",
-    :taxonomy => categories,
-    :parent => "Categories",
+    :name => "Other",
+    :taxonomy => materials,
+    :parent => "Materials",
     :position => 2,
     :products => [
-      products[:ror_mug],
-      products[:ror_stein],
-      products[:spree_stein],
-      products[:spree_mug]
+      products[:mixed_rigid_plastics],
+      products[:pvk_film],
+      products[:pla_bottles]
     ]
   },
   {
-    :name => "Clothing",
-    :taxonomy => categories,
-    :parent => "Categories" 
+    :name => "Polyethylene",
+    :taxonomy => materials,
+    :parent => "Materials",
+    :position => 1,
+    :products => [
+      products[:pet_milk_jug]
+    ]
   },
   {
-    :name => "Shirts",
-    :taxonomy => categories,
-    :parent => "Clothing",
+    :name => "High Density Polyethylene",
+    :taxonomy => materials,
+    :parent => "Materials",
+    :position => 2,
+    :products => [
+      products[:hdpe_foam],
+      products[:hdpe_shampoo_bottles]
+    ]
+  },
+  {
+    :name => "Low Density Polyethylene",
+    :taxonomy => materials,
+    :parent => "Materials",
+    :position => 3,
+    :products => [
+      products[:ldpe_shopping_bags]
+    ]  
+  },
+  {
+    :name => "Polystyrene",
+    :taxonomy => materials,
+    :parent => "Materials"
+    :products => [
+      products[:ps_foam]
+    ]
+  },
+  {
+    :name => "Polyvinyl Chloride",
+    :taxonomy => materials,
+    :parent => "Materials",
     :position => 0,
     :products => [
-      products[:ror_jr_spaghetti],
-      products[:spree_jr_spaghetti]
+      products[:pvc_piping]
     ]
   },
   {
-    :name => "T-Shirts",
-    :taxonomy => categories,
-    :parent => "Clothing" ,
+    :name => "Polypropylene",
+    :taxonomy => materials,
+    :parent => "Materials" ,
     :products => [
-      products[:ror_baseball_jersey],
-      products[:ror_ringer],
-      products[:apache_baseball_jersey],
-      products[:ruby_baseball_jersey],
-      products[:spree_baseball_jersey],
-      products[:spree_ringer]
+      products[:pp_regrind]
     ],
     :position => 0
   },
   {
-    :name => "Brands",
-    :taxonomy => brands
+    :name => "companies",
+    :taxonomy => companies
   },
   {
-    :name => "Ruby",
-    :taxonomy => brands,
-    :parent => "Brand" 
+    :name => "Thomas Chen Co.",
+    :taxonomy => companies,
+    :parent => "companies"
+    :products => products 
   },
   {
-    :name => "Apache",
-    :taxonomy => brands,
-    :parent => "Brand" 
+    :name => "ML Resources Inc.",
+    :taxonomy => companies,
+    :parent => "companies" 
   },
   {
-    :name => "Spree",
-    :taxonomy => brands,
-    :parent => "Brand"
+    :name => "Acme Inc.",
+    :taxonomy => companies,
+    :parent => "companies"
   },
   {
-    :name => "Rails",
-    :taxonomy => brands,
-    :parent => "Brand"
+    :name => "37 Signals",
+    :taxonomy => companies,
+    :parent => "companies"
   },
 ]
 

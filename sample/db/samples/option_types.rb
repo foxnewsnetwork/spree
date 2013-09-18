@@ -1,11 +1,11 @@
 Spree::OptionType.create!([
   {
-    :name => "tshirt-size",
-    :presentation => "Size",
+    :name => "plastic-grade",
+    :presentation => "Grade",
     :position => 1
   },
   {
-    :name => "tshirt-color",
+    :name => "plastic-color",
     :presentation => "Color",
     :position => 2
   }

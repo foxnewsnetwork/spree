@@ -4,6 +4,8 @@ module Spree
     belongs_to :state, class_name: "Spree::State"
 
     has_many :shipments
+    has_many :variants, class_name: "Spree::Variant"
+    has_many :products, through: :variants, class_name: "Spree::Product"
 
     validates :address1, :city, :country, presence: true
     validates :zipcode, presence: true, if: :require_zipcode?

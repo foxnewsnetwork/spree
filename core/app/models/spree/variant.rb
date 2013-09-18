@@ -3,6 +3,9 @@ module Spree
     acts_as_paranoid
 
     belongs_to :product, touch: true, class_name: 'Spree::Product'
+    belongs_to :location, 
+      foreign_key: 'address_id',
+      class_name: 'Spree::Address'
 
     delegate_belongs_to :product, :name, :description, :permalink, :available_on,
                         :tax_category_id, :shipping_category_id, :meta_description,
@@ -19,7 +22,7 @@ module Spree
     has_many :images, -> { order(:position) }, as: :viewable, dependent: :destroy, class_name: "Spree::Image"
 
     has_one :default_price,
-      -> { where currency: Spree::Config[:currency] },
+      -> { where terms: Price::EXWORK, currency: Spree::Config[:currency] },
       class_name: 'Spree::Price',
       dependent: :destroy
 
