@@ -2,8 +2,8 @@ module Spree
   class StockQuantity < ActiveRecord::Base
     belongs_to :variant, class_name: "Spree::Variant"
 
-    def in_stock?
-      !pounds_on_hand.to_i.zero?
+    def in_stock?(quantity=0)
+      !pounds_on_hand.to_i >= quantity.to_i
     end
 
     def restock!(quantity)
