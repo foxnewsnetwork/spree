@@ -8,5 +8,5 @@ ror_baseball_jersey.option_types = [grade, color]
 ror_baseball_jersey.save!
 
 spree_baseball_jersey = Spree::Product.find_by_name!("PS Foam")
-spree_baseball_jersey.option_types = [size, color]
+spree_baseball_jersey.option_types = [grade, color]
 spree_baseball_jersey.save!
