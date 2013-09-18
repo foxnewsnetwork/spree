@@ -1,1 +1,1 @@
-Spree::TaxCategory.create! :name => "Business"
+Spree::TaxCategory.create! :name => "International Trade"
