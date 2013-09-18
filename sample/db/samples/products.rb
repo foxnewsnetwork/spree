@@ -74,7 +74,8 @@ products = [
   }
 ]
 
-shop = User.find_by_email!("dev@thomaschen.co").shop
+user = Spree::User.find_by_email! "dev@thomaschen.co"
+shop = Spree::Shop.find user.id
 products.each do |product_attrs|
   Spree::Config[:currency] = "USD"
   default_shipping_category = Spree::ShippingCategory.find_by_name!("Default Shipping")
