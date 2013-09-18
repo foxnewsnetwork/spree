@@ -1,12 +1,7 @@
 Spree::Sample.load_sample("variants")
 
-location = Spree::StockLocation.first_or_create! name: 'default'
-location.active = true
-location.country =  Spree::Country.where(iso: 'US').first
-location.save!
-
 Spree::Variant.all.each do |variant|
-  variant.stock_items.each do |stock_item|
-    Spree::StockMovement.create(:quantity => 10, :stock_item => stock_item)
-  end
+  variant.stock_quantity.restock! rand 100000
+  variant.stock_quantity.start_on! 1.day.ago
+  variant.stock_quantity.end_on! 1.week.from_now
 end

@@ -14,9 +14,7 @@ module Spree
     has_many :inventory_units
     has_many :line_items
 
-    has_many :stock_items, dependent: :destroy
-    has_many :stock_locations, through: :stock_items
-    has_many :stock_movements
+    has_one :stock_quantity, dependent: :destroy, class_name: 'Spree::StockQuantity'
 
     has_and_belongs_to_many :option_values, join_table: :spree_option_values_variants
     has_many :images, -> { order(:position) }, as: :viewable, dependent: :destroy, class_name: "Spree::Image"
@@ -38,7 +36,7 @@ module Spree
 
     before_validation :set_cost_currency
     after_save :save_default_price
-    after_create :create_stock_items
+    after_create :create_stock_quantity
     after_create :set_position
 
     # default variant scope only lists non-deleted variants
@@ -137,11 +135,11 @@ module Spree
     end
     
     def in_stock?(quantity=1)
-      Spree::Stock::Quantifier.new(self).can_supply?(quantity)
+      stock_quantity.in_stock? quantity
     end
 
     def total_on_hand
-      Spree::Stock::Quantifier.new(self).total_on_hand
+      stock_quantity.total_on_hand
     end
 
     private
@@ -177,10 +175,8 @@ module Spree
         self.cost_currency = Spree::Config[:currency] if cost_currency.nil? || cost_currency.empty?
       end
 
-      def create_stock_items
-        StockLocation.all.each do |stock_location|
-          stock_location.propagate_variant(self) if stock_location.propagate_all_variants?
-        end
+      def create_stock_quantity
+        self.stock_quantity = Spree::StockQuantity.create! variant_id: id
       end
 
       def set_position

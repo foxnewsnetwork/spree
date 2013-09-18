@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  pounds_on_hand: 1
+  availability_start: 2013-09-17 17:11:57
+  availability_end: 2013-09-17 17:11:57
+
+two:
+  pounds_on_hand: 1
+  availability_start: 2013-09-17 17:11:57
+  availability_end: 2013-09-17 17:11:57
