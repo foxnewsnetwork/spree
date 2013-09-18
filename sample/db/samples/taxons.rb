@@ -2,7 +2,7 @@ Spree::Sample.load_sample("taxonomies")
 Spree::Sample.load_sample("products")
 
 materials = Spree::Taxonomy.find_by_name!("Materials")
-brands = Spree::Taxonomy.find_by_name!("Companies")
+companies = Spree::Taxonomy.find_by_name!("Companies")
 
 products = { 
   :pet_milk_jug => "PET Milk Jug",
