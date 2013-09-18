@@ -1,5 +1,5 @@
 module Spree
   class User < ActiveRecord::Base
-    # Placeholder for seeding purposes
+    has_one :shop, :class_name => "Spree::Shop"
   end
 end
