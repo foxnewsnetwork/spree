@@ -11,11 +11,11 @@ module Spree
     end
 
     def start_on!(date)
-      update_attributes! :availability_starts => date
+      update_attributes! :availability_start => date
     end
 
     def end_on!(date)
-      update_attributes! :availability_ends => date
+      update_attributes! :availability_end => date
     end
 
   end
