@@ -70,7 +70,7 @@ taxons = [
   {
     :name => "Polystyrene",
     :taxonomy => materials,
-    :parent => "Materials"
+    :parent => "Materials",
     :products => [
       products[:ps_foam]
     ]
@@ -100,7 +100,7 @@ taxons = [
   {
     :name => "Thomas Chen Co.",
     :taxonomy => companies,
-    :parent => "companies"
+    :parent => "companies",
     :products => products 
   },
   {
