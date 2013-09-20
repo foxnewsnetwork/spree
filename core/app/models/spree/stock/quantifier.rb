@@ -1,23 +1,24 @@
 module Spree
   module Stock
     class Quantifier
-      attr_reader :stock_items
+      attr_reader :stock_quantity
 
       def initialize(variant)
-        @variant = variant
-        @stock_items = Spree::StockItem.joins(:stock_location).where(:variant_id => @variant, Spree::StockLocation.table_name =>{ :active => true})
+        @variant = Spree::Variant.find variant
+        @stock_quantity = @variant.stock_quantity
       end
 
       def total_on_hand
         if Spree::Config.track_inventory_levels
-          stock_items.to_a.sum(&:count_on_hand)
+          stock_quantity.pounds_on_hand
         else
           Float::INFINITY
         end
       end
 
+      # Not supported
       def backorderable?
-        stock_items.any?(&:backorderable)
+        false
       end
 
       def can_supply?(required)

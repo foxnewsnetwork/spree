@@ -2,7 +2,9 @@ Spree::Core::Engine.routes.draw do
 
   root :to => 'home#index'
 
-  resources :products
+  resources :products do
+    resources :addresses, :only => [:show], :controller => 'products/addresses'
+  end
 
   get '/locale/set', :to => 'locale#set'
 

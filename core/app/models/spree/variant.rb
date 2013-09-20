@@ -3,6 +3,7 @@ module Spree
     acts_as_paranoid
 
     belongs_to :product, touch: true, class_name: 'Spree::Product'
+    belongs_to :address, :class_name => 'Spree::Address'
     belongs_to :location, 
       foreign_key: 'address_id',
       class_name: 'Spree::Address'

@@ -1,0 +1,24 @@
+.product-show-content {
+  ul.addresses {
+    list-style: none;
+    font-size: 16px;
+
+    li.address {
+      border-bottom: 1px solid $border_color;
+      padding-bottom: 5px;
+      padding-top: 5px;
+      &:nth-child(even) {
+        background-color: $even_row_background_color;
+      }
+
+      &:nth-child(odd) {
+        background-color: $odd_row_background_color;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+  }
+}

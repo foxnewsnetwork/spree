@@ -1,0 +1,9 @@
+%li.address
+  = link_to product_address_path(@product, address) do
+    %span.product.address
+      %span.nickname= address.nickname if address.nickname.present?
+      %span.spacer= " -- "
+      %span.city= address.city
+      %span.spacer= ", "
+      %span.state= address.state.name if address.state.present?
+      %span.country= address.country.iso

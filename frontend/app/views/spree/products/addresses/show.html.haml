@@ -1,0 +1,19 @@
+.product-addresses-show{ "data-hook" => "product_show" }
+  - @body_id = 'product-details-addresses'
+
+  .columns.six.alpha{ "data-hook" => "product_left_part" }
+    .row{ "data-hook" => "product_left_part_wrap" }
+      #product-images{ "data-hook" => "product_images" }
+        #main-image{ "data-hook" => true }
+          = render :partial => "spree/products/image"
+      #thumbnails{ "data-hook" => true }
+        = render :partial => 'spree/products/thumbnails'
+
+
+  .columns.ten.omega
+    .row{ "data-hook" => "product_right_part_wrap" }
+      #product-description{ "data-hook" => "product_description" }
+        %h1.product-title= accurate_title
+        .description= product_description @product
+      #bid-form{ "data-hook" => "bid_form" }
+        = render :partial => "spree/products/bid_form"
