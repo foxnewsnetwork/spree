@@ -5,6 +5,7 @@ module Spree
     CNF = "CNF"
     CIF = "CIF"
     EXWORK = "EXWORK"
+    Terms = [FOB, FAS, CNF, CIF, EXWORK]
 
     belongs_to :variant, class_name: 'Spree::Variant'
     belongs_to :address, :class_name => "Spree::Address"

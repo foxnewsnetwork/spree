@@ -21,6 +21,10 @@ module Spree
       new(country: country)
     end
 
+    def self.find_or_create(params)
+      where(params).first || create!(params)
+    end
+
     # Can modify an address if it's not been used in an order (but checkouts controller has finer control)
     # def editable?
     #   new_record? || (shipments.empty? && checkouts.empty?)

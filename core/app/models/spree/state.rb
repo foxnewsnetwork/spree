@@ -18,6 +18,10 @@ module Spree
       state_info
     end
 
+    def self.all_state_names
+      @_all_state_names ||= Spree::State.all.map(&:name).sort.unshift "California"
+    end
+
     def <=>(other)
       name <=> other.name
     end

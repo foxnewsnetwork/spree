@@ -1,0 +1,5 @@
+%dl.variant-detials
+  %dt= Spree.t :seller
+  %dd= link_to @product.shop.name, "#link_not_implemented"
+  %dt= Spree.t :email
+  %dd= mail_to @product.shop.owner.email

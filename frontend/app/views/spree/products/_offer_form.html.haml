@@ -1,0 +1,22 @@
+.offer-form
+  = form_for :price, :url => variant_offers_path(@variants.first) do |f|
+    %fieldset.composite-price
+      %legend
+        %h1= Spree.t :make_offer
+      %dl
+        %dt= f.label :terms, Spree.t(:shipping_terms)
+        %dd= f.select :terms, options_for_select(Spree::Price::Terms)
+        %dt= f.label :country, Spree.t(:destination_country)
+        %dd= f.select :country, options_for_select(Spree::Country.all_country_names)
+        %dt= f.label :state, Spree.t(:destination_state)
+        %dd= f.select :state, options_for_select(Spree::State.all_state_names)
+        %dt= f.label :city, Spree.t(:destination_city)
+        %dd= f.text_field :city
+        %dt= f.label :containers, Spree.t(:number_of_containers)
+        %dd= f.number_field :containers, :value => 1
+        %dt= f.label :amount, Spree.t(:price_per_pound)
+        %dd
+          %span.append-sign $
+          = f.number_field :amount, :min => 0, :step => 0.00001
+      .form-actions
+        = f.submit :submit

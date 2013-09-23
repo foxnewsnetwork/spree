@@ -7,6 +7,9 @@ module Spree
     belongs_to :location, 
       foreign_key: 'address_id',
       class_name: 'Spree::Address'
+    belongs_to :origination,
+      foreign_key: 'address_id',
+      class_name: 'Spree::Address'
 
     delegate_belongs_to :product, :name, :description, :permalink, :available_on,
                         :tax_category_id, :shipping_category_id, :meta_description,

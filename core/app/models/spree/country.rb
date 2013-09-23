@@ -10,6 +10,10 @@ module Spree
       states_required
     end
 
+    def self.all_country_names
+      @_all_countries ||= all.map(&:name).sort.unshift "United States"
+    end
+
     def <=>(other)
       name <=> other.name
     end

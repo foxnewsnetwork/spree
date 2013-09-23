@@ -6,6 +6,17 @@ Spree::Core::Engine.routes.draw do
     resources :addresses, :only => [:show], :controller => 'products/addresses'
   end
 
+  resources :variants, :only => [] do
+    resources :offers, :only => [:create], :controller => 'variants/offers'
+  end
+
+  resources :offers, :only => [:show] do
+    member do
+      get 'login'
+      put 'connect'
+    end
+  end
+
   get '/locale/set', :to => 'locale#set'
 
   # non-restful checkout stuff

@@ -15,5 +15,6 @@
       #product-description{ "data-hook" => "product_description" }
         %h1.product-title= accurate_title
         .description= product_description @product
-      #bid-form{ "data-hook" => "bid_form" }
-        = render :partial => "spree/products/bid_form"
+        = render :partial => "spree/products/product_details"
+      %ul#product-variants
+        = render :partial => "spree/products/variant", :collection => @variants
