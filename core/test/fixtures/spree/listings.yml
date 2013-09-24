@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  stockpile_id: 1
+  shop_id: 1
+  available_on: 2013-09-23 15:50:22
+  expires_on: 2013-09-23 15:50:22
+  days_to_refresh: 1
+
+two:
+  stockpile_id: 1
+  shop_id: 1
+  available_on: 2013-09-23 15:50:22
+  expires_on: 2013-09-23 15:50:22
+  days_to_refresh: 1
