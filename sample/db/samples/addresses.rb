@@ -32,6 +32,6 @@ Spree::Address.create!(
   :address2 => Faker::Address.secondary_address,
   :city => Faker::Address.city,
   :state => california,
-  :zipcode => Faker::Address.zip,
+  :zipcode => 90210,
   :country => united_states,
   :phone => Faker::PhoneNumber.phone_number)
