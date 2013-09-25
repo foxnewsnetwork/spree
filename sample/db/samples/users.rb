@@ -1,1 +1,1 @@
-User.create! :email => "admin@thomaschen.co", :password => "asdf123"
+Spree::User.create! :email => "admin@thomaschen.co", :password => "asdf123"
