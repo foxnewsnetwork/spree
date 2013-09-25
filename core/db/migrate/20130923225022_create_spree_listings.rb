@@ -11,6 +11,5 @@ class CreateSpreeListings < ActiveRecord::Migration
       t.timestamps
     end
     add_index :spree_listings, [:shop_id]
-    add_index :spree_listings, [:address_id]
   end
 end
