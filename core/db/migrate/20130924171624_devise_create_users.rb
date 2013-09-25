@@ -3,8 +3,10 @@ class DeviseCreateUsers < ActiveRecord::Migration
     create_table(:spree_users) do |t|
       ## Database authenticatable
       t.string :email,              :null => false, :default => ""
-      t.string :encrypted_password, :null => false, :default => ""
-      t.string "salt",              :limit => 128
+      t.string :password_salt
+      t.string     :login
+      t.references :ship_address
+      t.references :bill_address
 
       ## Recoverable
       t.string   :reset_password_token
@@ -18,12 +20,13 @@ class DeviseCreateUsers < ActiveRecord::Migration
       t.string   "perishable_token"
 
       ## Trackable
-      t.integer  :sign_in_count, :default => 0
-      t.integer  "failed_login_count",                       :default => 0, :null => false
+      t.integer  :sign_in_count, :default => 0, :null => false
+      t.integer  :failed_attempts,                       :default => 0, :null => false
       t.datetime :current_sign_in_at
       t.datetime :last_sign_in_at
       t.string   :current_sign_in_ip
       t.string   :last_sign_in_ip
+      t.datetime   :last_request_at
 
       ## Confirmable
       # t.string   :confirmation_token
@@ -33,11 +36,11 @@ class DeviseCreateUsers < ActiveRecord::Migration
 
       ## Lockable
       # t.integer  :failed_attempts, :default => 0 # Only if lock strategy is :failed_attempts
-      # t.string   :unlock_token # Only if unlock strategy is :email or :both
-      # t.datetime :locked_at
+      t.string   :unlock_token # Only if unlock strategy is :email or :both
+      t.datetime :locked_at
 
       ## Token authenticatable
-      # t.string :authentication_token
+      t.string :authentication_token
       t.string   "openid_identifier"
 
       t.timestamps
@@ -46,7 +49,7 @@ class DeviseCreateUsers < ActiveRecord::Migration
     add_index :spree_users, :email,                :unique => true
     add_index :spree_users, :reset_password_token, :unique => true
     # add_index :users, :confirmation_token,   :unique => true
-    # add_index :users, :unlock_token,         :unique => true
-    # add_index :users, :authentication_token, :unique => true
+    add_index :users, :unlock_token,         :unique => true
+    add_index :users, :authentication_token, :unique => true
   end
 end
