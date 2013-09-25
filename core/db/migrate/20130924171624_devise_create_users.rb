@@ -49,7 +49,7 @@ class DeviseCreateUsers < ActiveRecord::Migration
     add_index :spree_users, :email,                :unique => true
     add_index :spree_users, :reset_password_token, :unique => true
     # add_index :users, :confirmation_token,   :unique => true
-    add_index :users, :unlock_token,         :unique => true
-    add_index :users, :authentication_token, :unique => true
+    add_index :spree_users, :unlock_token,         :unique => true
+    add_index :spree_users, :authentication_token, :unique => true
   end
 end
