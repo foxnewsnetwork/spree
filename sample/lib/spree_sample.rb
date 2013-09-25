@@ -12,9 +12,7 @@ module SpreeSample
       Spree::Sample.load_sample("shipping_methods")
       Spree::Sample.load_sample("tax_categories")
       Spree::Sample.load_sample("tax_rates")
-
       Spree::Sample.load_sample("products")
-      Spree::Sample.load_sample("taxons")
       Spree::Sample.load_sample("option_values")
       Spree::Sample.load_sample("product_option_types")
       Spree::Sample.load_sample("product_properties")
@@ -26,6 +24,15 @@ module SpreeSample
       Spree::Sample.load_sample("orders")
       Spree::Sample.load_sample("adjustments")
       Spree::Sample.load_sample("payments")
+
+      # International materials trade related junk
+      Spree::Sample.load_sample("materials")
+      Spree::Sample.load_sample("users")
+      Spree::Sample.load_sample("shops")
+      Spree::Sample.load_sample("stockpiles")
+      Spree::Sample.load_sample("listings")
+      Spree::Sample.load_sample("taxons")
+      Spree::Sample.load_sample("offers")
     end
   end
 end

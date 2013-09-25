@@ -6,6 +6,9 @@ module Spree
     has_many :classifications, dependent: :delete_all
     has_many :products, through: :classifications
 
+    has_many :abelian_groups, dependent: :delete_all
+    has_many :stockpiles, through: :abelian_groups
+
     before_create :set_permalink
 
     validates :name, presence: true
