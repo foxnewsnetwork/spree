@@ -27,7 +27,7 @@ Spree::Address.create!(
 
 # Shop Address
 Spree::Address.create!(
-  :nickname => "Admin Shop"
+  :nickname => "Admin Shop",
   :address1 => Faker::Address.street_address,
   :address2 => Faker::Address.secondary_address,
   :city => Faker::Address.city,
