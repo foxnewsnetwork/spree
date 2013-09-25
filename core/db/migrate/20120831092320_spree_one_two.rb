@@ -421,32 +421,6 @@ class SpreeOneTwo < ActiveRecord::Migration
       t.timestamps
     end
 
-    create_table :spree_users do |t|
-      t.string     :encrypted_password,     :limit => 128
-      t.string     :password_salt,          :limit => 128
-      t.string     :email
-      t.string     :remember_token
-      t.string     :persistence_token
-      t.string     :reset_password_token
-      t.string     :perishable_token
-      t.integer    :sign_in_count,                         :default => 0, :null => false
-      t.integer    :failed_attempts,                       :default => 0, :null => false
-      t.datetime   :last_request_at
-      t.datetime   :current_sign_in_at
-      t.datetime   :last_sign_in_at
-      t.string     :current_sign_in_ip
-      t.string     :last_sign_in_ip
-      t.string     :login
-      t.references :ship_address
-      t.references :bill_address
-      t.string     :authentication_token
-      t.string     :unlock_token
-      t.datetime   :locked_at
-      t.datetime   :remember_created_at
-      t.datetime   :reset_password_sent_at
-      t.timestamps
-    end
-
     create_table :spree_variants do |t|
       t.string     :sku,                                         :default => '',    :null => false
       t.decimal    :price,         :precision => 8, :scale => 2,                    :null => false
