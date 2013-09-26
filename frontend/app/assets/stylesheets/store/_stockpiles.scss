@@ -1,0 +1,10 @@
+/*--------------------------------------*/
+/* Stockpiles
+/*--------------------------------------*/
+ul#stockpiles {
+  @include product-like(stockpile);
+}
+
+.product-show {
+  @include product-show;
+}

@@ -1,0 +1,14 @@
+- paginated_stockpiles ||= stockpiles
+
+- if stockpiles.blank?
+  = Spree.t(:no_products_found)
+- elsif params.key? :keywords
+  %h6.search-results-title= Spree.t(:search_results, :keywords => h(params[:keywords]))
+
+- if stockpiles.present?
+  %ul#stockpiles.inline.stockpiles-listing
+    = render :partial => "spree/shared/stockpiles/stockpile", :collection => stockpiles
+  - reset_cycle("classes")
+
+- if paginated_stockpiles.respond_to?(:num_pages)
+  = paginate paginated_stockpiles

@@ -4,8 +4,13 @@ module Spree
     respond_to :html
 
     def index
-      @searcher = build_searcher(params)
-      @products = @searcher.retrieve_products
+      _stockpiles
+    end
+
+    private
+
+    def _stockpiles
+      @stockpiles ||= Spree::Stockpile.all
     end
   end
 end

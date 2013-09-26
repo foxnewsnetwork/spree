@@ -1,5 +1,5 @@
-Spree::Sample.load_samples("materials")
-Spree::Sample.load_samples("addresses")
+Spree::Sample.load_sample("materials")
+Spree::Sample.load_sample("addresses")
 Spree::Sample.load_sample("option_values")
 
 shop_address = Spree::Address.find_by_nickname! "Admin Shop"
@@ -12,13 +12,13 @@ def rand_subarray(array)
   array.slice(s, f).to_a
 end
 
-Materials.all.each do |material|
+Spree::Material.all.each do |material|
   attributes = {
     material: material,
     address: shop_address,
     option_values: rand_subarray(proccesses) + rand_subarray(packages),
     pounds_on_hand: rand(345455),
-    cost_price_per_pound: rand(32)
+    cost_usd_per_pound: rand(32)
   }
   Spree::Stockpile.create! attributes
 end

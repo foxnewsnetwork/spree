@@ -2,7 +2,11 @@ module Spree
   class Material < ActiveRecord::Base
     acts_as_paranoid
     has_many :stockpiles, class_name: 'Spree::Stockpile'
-
+    has_many :images, 
+      -> { order(:position) }, 
+      as: :viewable, 
+      dependent: :destroy, 
+      class_name: "Spree::Image"
     make_permalink order: :name
     validates :name, presence: true
     validates :permalink, presence: true

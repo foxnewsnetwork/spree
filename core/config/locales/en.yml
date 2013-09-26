@@ -967,6 +967,7 @@ en:
     shipping_methods: Shipping Methods
     shipping_price_sack: Price sack
     shop_by_taxonomy: Shop by %{taxonomy}
+    search_by_taxonomy: Search by %{taxonomy}
     shopping_cart: Shopping Cart
     show: Show
     show_active: Show Active

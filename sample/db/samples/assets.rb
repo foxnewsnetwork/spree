@@ -1,5 +1,6 @@
 Spree::Sample.load_sample("products")
 Spree::Sample.load_sample("variants")
+Spree::Sample.load_sample("stockpiles")
 
 products = {}
 products[:ror_baseball_jersey] = Spree::Product.find_by_name!("Ruby on Rails Baseball Jersey") 
@@ -20,11 +21,22 @@ products[:ruby_baseball_jersey] = Spree::Product.find_by_name!("Ruby Baseball Je
 products[:apache_baseball_jersey] = Spree::Product.find_by_name!("Apache Baseball Jersey")
 
 
+def image_path(name, type="jpeg")
+  File.join Pathname.new(File.dirname(__FILE__)), "images", "#{name}.#{type}"
+end
 def image(name, type="jpeg")
-  images_path = Pathname.new(File.dirname(__FILE__)) + "images"
-  path = images_path + "#{name}.#{type}"
+  path = image_path(name, type)
   return false if !File.exist?(path)
   File.open(path)
+end
+
+Spree::Stockpile.all.each do |stockpile|
+  main_img = image(stockpile.image_name)
+  if main_img
+    stockpile.images.create! :attachment =>  main_img
+  else
+    puts "#{image_path stockpile.image_name} failed to load..."
+  end
 end
 
 images = {

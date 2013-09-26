@@ -1,0 +1,6 @@
+= content_for :sidebar do
+  .homepage-sidebar-navigation{"data-hook"=>"homepage_sidebar_navigation"}
+    = render :partial => 'spree/shared/taxonomies'
+
+.homepage-stockpiles{ "data-hook" => "homepage-stockpiles" }
+  = render :partial => 'spree/shared/stockpiles', :locals => { :stockpiles => @stockpiles }
