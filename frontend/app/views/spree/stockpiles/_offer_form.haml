@@ -1,0 +1,19 @@
+= form_for :offer, :url => listing_offer_index_path(listing) do |f|
+  %fieldset
+    %legend= Spree.t :your_offer
+    %dl.fields
+      %dt= f.label :shipping_terms
+      %dd= f.select :shipping_terms, options_for_select(Spree::Offer::Terms)
+      %dt= f.label :country, Spree.t(:destination_country)
+      %dd= f.select :country, options_for_select(Spree::Country.all_names)
+      %dt= f.label :state, Spree.t(:destination_state)
+      %dd= f.select :state, options_for_select(Spree::State.all_names)
+      %dt= f.label :city, Spree.t(:destination)
+      %dd= f.text_field :city
+      %dt= f.label :containers
+      %dd= f.number_field :containers, :value => 1
+      %dt= f.label :usd_per_pound, Spree.t(:price_per_pound)
+      %dd= f.number_field :usd_per_pound, :step => 0.00001, :min => 0
+    .form-action
+      = f.submit "Make Offer"
+

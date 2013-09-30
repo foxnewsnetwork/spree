@@ -1,0 +1,44 @@
+.stockpile-show
+  - @body_id = "stockpile-details"
+  .columns.six.alpha{ "data-hook" => "stockpile_left_part" }
+    .row{ "data-hook" => "stockpile_left_part_wrap" }
+      #stockpile-images.stockpile-images
+        #main-image
+          = render partial: 'image', locals: { stockpile: @stockpile}
+        #thumbnails
+          = render partial: 'thumbnails', locals: { stockpile: @stockpile}
+    .row{ "data-hook" => "stockpile_left_part_wrap" }
+      .stockpile-properties
+        = render partial: 'properties', locals: { stockpile: @stockpile }
+
+    .row{ "data-hook" => "stockpile_left_part_wrap" }
+      .stockpile-values
+        = render partial: 'values', locals: { stockpile: @stockpile }
+
+    .row{ "data-hook" => "stockpile_left_part_wrap" }
+      .stockpile-offers
+        = render partial: 'listing_offers', locals: { listing: @stockpile.listing }
+
+  .columns.ten.omega{ "data-hook" => "stockpile_right_part" }
+    .row{ "data-hook" => "stockpile_right_part_wrap" }
+      #stockpile-description.stockpile-description
+        %h1.stockpile-title= accurate_title
+        .description
+          = @stockpile.full_description rescue Spree.t(:product_has_no_description)
+
+    .row{ "data-hook" => "stockpile_right_part_wrap" }
+      .stockpile-details
+        %h1.stockpile-title= Spree.t(:seller_details)
+        %dl
+          %dt= Spree.t :company
+          %dd= link_to h(@stockpile.shop.name), @stockpile.shop
+          %dt= Spree.t :contact_email
+          %dd= @stockpile.shop.email
+          %dt= Spree.t :material_location
+          %dd= @stockpile.address.permalink_name
+          %dt= Spree.t :asking_price
+          %dd= @stockpile.seller_offer.try(:summary) || Spree.t(:not_available)
+
+    .row{ "data-hook" => "stockpile_right_part_wrap" }
+      #escrow-form.escrow-form
+        = render partial: 'offer_form', locals: { listing: @stockpile.listing }

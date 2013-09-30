@@ -25,7 +25,7 @@ module Spree
     # end
 
     def permalink_name
-      "#{state.try(:name) || country.iso}-#{city}".strip.downcase
+      "#{state.try(:name) || country.iso} - #{city}".strip.downcase
     end
 
     def full_name

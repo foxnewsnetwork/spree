@@ -1,0 +1,4 @@
+- if stockpile.option_values.present?
+  %h6.stockpiles-section-title= Spree.t(:physical_properties)
+  %dl#stockpile-properties.dl-display
+    = render partial: 'spree/stockpiles/properties/property', collection: stockpile.properties

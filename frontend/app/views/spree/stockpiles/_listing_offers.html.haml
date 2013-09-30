@@ -1,0 +1,6 @@
+%h6.stockpiles-section-title= Spree.t(:offer_statistics)
+%dl#stockpile-properties.dl-display
+  %dt= Spree.t(:offers_made)
+  %dd= link_to listing.offers.count, listing_offer_index_path(listing)
+  %dt= Spree.t(:max_offer)
+  %dd= listing.max_offer.try(:to_summary) || Spree.t(:not_available)

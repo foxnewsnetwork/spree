@@ -1,0 +1,14 @@
+%h6.stockpiles-section-title= Spree.t(:stock_properties)
+%dl#stockpile-properties.dl-display
+  %dt= Spree.t(:available_weight)
+  %dd
+    = stockpile.pounds_on_hand
+    = Spree.t :pounds
+  %dt= Spree.t(:available_on)
+  %dd= (stockpile.available_on || stockpile.listing.created_at).to_s :short
+  %dt= Spree.t(:expires_on)
+  %dd= stockpile.expires_on.try(:to_s, :short) || Spree.t(:when_sold)
+  %dt= Spree.t(:container_weight)
+  %dd
+    = stockpile.container_weight || Spree.t(:unknown)
+    = Spree.t :pounds

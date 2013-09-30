@@ -23,5 +23,16 @@ module Spree
     def total_usd
       containers.to_i * usd_per_pound * PoundsPerContainer
     end
+
+    def to_summary
+      "#{containers.to_i} containers @ #{usd_per_pound} / lbs " + _shipping_summary
+    end
+
+    private
+
+    def _shipping_summary
+      return shipping_terms if shipping_terms == EXWORKS
+      "#{shipping_terms} #{destination.permalink_name}"
+    end
   end
 end

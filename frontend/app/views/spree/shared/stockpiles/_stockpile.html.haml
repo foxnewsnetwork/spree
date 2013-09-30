@@ -1,5 +1,5 @@
 - cycle_class = cycle("alpha", "secondary", "", "omega secondary", :name => "classes")
 %li.stockpile.columns.three{ :class => cycle_class }
   .stockpile-image
-    = link_to small_image(stockpile, :itemprop => "image"), "#stockpile"
+    = link_to small_image(stockpile, :itemprop => "image"), stockpile
   = link_to truncate(stockpile.name, :length => 50), "#stockpile", :class => 'info'

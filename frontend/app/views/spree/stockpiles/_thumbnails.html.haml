@@ -1,0 +1,3 @@
+- if stockpile.images.uniq.size > 1
+  %ul#product-thumbnails.thumbnails.inline
+    = render partial: "spree/stockpiles/thumbnails/thumbnail", collection: stockpile.images 
