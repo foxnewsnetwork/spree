@@ -7,6 +7,10 @@ Spree::Core::Engine.routes.draw do
   resources :listings do
     resources :offer, :only => [:create, :index]
   end
+  resources :offers, :only => [] do
+    resources :addresses, :only => [:create]
+    resources :users, :only => [:create]
+  end
   resources :shops, :only => [:show]
 
   get '/locale/set', :to => 'locale#set'

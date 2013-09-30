@@ -20,12 +20,30 @@ module Spree
       class_name: 'Spree::Address',
       through: :listing
 
+    validates :listing_id, presence: true
+
     def total_usd
       containers.to_i * usd_per_pound * PoundsPerContainer
     end
 
     def to_summary
       "#{containers.to_i} containers @ #{usd_per_pound} / lbs " + _shipping_summary
+    end
+
+    def requires_destination?
+      destination.blank?
+    end
+
+    def requires_buyer?
+      user.blank?
+    end
+
+    def complete?
+      !incomplete?
+    end
+
+    def incomplete?
+      requires_destination? || requires_buyer?
     end
 
     private
