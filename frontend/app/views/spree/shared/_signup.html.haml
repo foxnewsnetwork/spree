@@ -1,0 +1,13 @@
+- url ||= user_registration_path
+= form_for :user, url: url do |f|
+  %fieldset
+    %legend= Spree.t(:new_user)
+    %dl.fields
+      %dt= f.label :email
+      %dd= f.email_field :email
+      %dt= f.label :password
+      %dd= f.password_field :password
+      %dt= f.label :password_confirmation
+      %dd= f.password_field :password_confirmation
+    .form-actions
+      = f.submit

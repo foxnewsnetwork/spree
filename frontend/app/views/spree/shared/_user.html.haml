@@ -1,0 +1,6 @@
+- if user_signed_in?
+  = link_to Spree.t(:my_account), user_path(current_user)
+  = link_to Spree.t(:sign_out), destroy_user_session_path, method: :delete
+- else
+  = link_to Spree.t(:login), login_path
+  = link_to Spree.t(:sign_up), signup_path

@@ -3,13 +3,28 @@ class Spree::Listings::OffersController < Spree::StoreController
   helper 'spree/taxons'
 
   def create
-    return redirect_to new_address_offers_path _offer if _offer.requires_destination?
-    return redirect_to new_user_offers_path _offer if _offer.requires_buyer?
-    return redirect_to offer_path _offer if _offer.complete?
+    return _address_step  if _offer.requires_destination?
+    return _user_step     if _offer.requires_buyer?
+    return _error_step    if _offer.errors?
   end
 
-
   private
+
+  def _address_step
+    _some_step { |*o| new_offer_address_path *o }
+  end
+
+  def _user_step
+    _some_step { |*o| new_offer_user_path *o }
+  end
+
+  def _error_step
+    _some_step { |*o| offer_path *o }
+  end
+
+  def _some_step(&block)
+    redirect_to yield(_offer, _address_params)
+  end
 
   def _offer
     @offer ||= _listing.offers.create _offer_params
@@ -20,18 +35,7 @@ class Spree::Listings::OffersController < Spree::StoreController
   end
 
   def _offer_params
-    params.require(:offer).permit(:containers, :shipping_terms, :usd_per_pound).merge _relationship_params
-  end
-
-  def _relationship_params
-    {
-      address: _address,
-      user: _user
-    }
-  end
-
-  def _address
-    @address ||= Spree::Address.new _address_params
+    params.require(:offer).permit(:containers, :shipping_terms, :usd_per_pound)
   end
 
   def _address_params

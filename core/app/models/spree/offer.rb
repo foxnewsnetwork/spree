@@ -20,7 +20,21 @@ module Spree
       class_name: 'Spree::Address',
       through: :listing
 
+    has_one :stockpile,
+      through: :listing
+
     validates :listing_id, presence: true
+
+    delegate :name, :to => :listing
+
+    scope :destined,
+      -> { where("address_id is not null") }
+    scope :possessed,
+      -> { where "user_id is not null" }
+    scope :relevant,
+      -> { where "listing_id is not null" }
+    scope :completed,
+      -> { destined.possessed.relevant }
 
     def total_usd
       containers.to_i * usd_per_pound * PoundsPerContainer
@@ -50,7 +64,7 @@ module Spree
 
     def _shipping_summary
       return shipping_terms if shipping_terms == EXWORKS
-      "#{shipping_terms} #{destination.permalink_name}"
+      "#{shipping_terms} #{destination.try :permalink_name}"
     end
   end
 end

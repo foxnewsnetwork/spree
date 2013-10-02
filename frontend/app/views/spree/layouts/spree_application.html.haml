@@ -1,0 +1,28 @@
+!!! 5
+/ [if lt IE 7 ]
+  %html.ie.ie6{ lang: I18n.locale }
+/ [if IE 7 ]
+  %html.ie.ie7{ lang: I18n.locale }
+/ [if IE 8 ]
+  %html.ie.ie8{ lang: I18n.locale }
+/ [if IE 9 ]
+  %html.ie.ie9{ lang: I18n.locale }
+/ [if gt IE 9]
+  %html{ lang: I18n.locale }
+
+%head{ "data-hook"=>"inside_head" }
+  = render :partial => 'spree/shared/head'
+%body{ "data-hook"=>"body", :class => body_class, :id => (@body_id || "default") }
+  .container
+    = render :partial => 'spree/shared/header'
+    #wrapper.row
+      = breadcrumbs(@taxon)
+      = render partial: 'spree/shared/sidebar' if content_for? :sidebar
+      #content.columns{ :class => content_for?(:sidebar) ? "twelve" : "sixteen" }
+        = render partial: 'spree/shared/flash', :collection => flash.to_a
+        = yield
+      = yield :templates
+    = render partial: 'spree/shared/footer'
+  = render partial: 'spree/shared/google_analytics'
+  :javascript
+    Spree.api_key = #{raw(try_spree_current_user.try(:spree_api_key).to_s.inspect)};

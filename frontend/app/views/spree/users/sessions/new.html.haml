@@ -1,0 +1,7 @@
+= content_for :sidebar do
+  %h1= Spree.t(:login)
+  
+.offers-login-new
+  - @body_id = 'users-login-new'
+  .columns.twelve.omega
+    .row= render 'spree/shared/login'

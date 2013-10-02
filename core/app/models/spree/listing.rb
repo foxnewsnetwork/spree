@@ -5,7 +5,11 @@ module Spree
     has_one :address,
       through: :stockpile,
       class_name: 'Spree::Address'
-    has_many :offers, class_name: 'Spree::Offer'
+    has_many :offers, 
+      -> { completed },
+      class_name: 'Spree::Offer'
+
+    delegate :name, :to => :stockpile
 
     def seller_offer
       offers.where(id: shop.user_id).first

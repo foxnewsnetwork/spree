@@ -44,8 +44,11 @@ module Spree
           [mem] << nex
         end
       end.map do |a|
-        a if a.is_a? Array
-        [a] unless a.is_a? Array
+        if a.is_a? Array
+          a
+        else
+          [a]
+        end
       end
     end
 

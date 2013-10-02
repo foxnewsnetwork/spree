@@ -1,0 +1,21 @@
+= form_for :address, :url => offer_addresses_path(offer) do |f|
+  %fieldset
+    %legend= Spree.t(:destination_address)
+    %dl.addresses
+      %dt= f.label :address1, Spree.t(:street_address)
+      %dd= f.text_field :address1
+      %dt= f.label :address2, Spree.t(:secondary_address)
+      %dd= f.text_field :address2
+      %dt= f.label :city, Spree.t(:destination)
+      %dd= f.text_field :city, value: address[:city]
+      %dt= f.label :zipcode, Spree.t(:zip_code)
+      %dd= f.text_field :zipcode
+      %dt= f.label :state, Spree.t(:destination_state)
+      %dd
+        = f.select :state, options_for_select(Spree::State.all_names.unshift address[:state])
+      %dt= f.label :country, Spree.t(:destination_country)
+      %dd
+        = f.select :country, options_for_select(Spree::Country.all_names.unshift address[:country])
+    .form-actions
+      = f.submit
+      

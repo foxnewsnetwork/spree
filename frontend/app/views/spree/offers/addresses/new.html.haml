@@ -1,0 +1,9 @@
+.offers-address-new
+  - @body_id = 'offers-address-new'
+  .columns.twelve.alpha{ "data-hook" => "stockpile_left_part" }
+    .row{ "data-hook" => "stockpile_left_part_wrap" }
+      %h1= @offer.name
+      %h6
+        = Spree.t(:step_two_of_three)
+        = link_to "(#{Spree.t(:back)})", stockpile_path(@offer.stockpile)
+      = render partial: 'address_form', locals: { offer: @offer, address: @address_params }

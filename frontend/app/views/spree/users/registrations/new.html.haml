@@ -1,0 +1,7 @@
+= content_for :sidebar do
+  %h1= Spree.t(:registration)
+  
+.offers-registration-new
+  - @body_id = 'users-registration-new'
+  .columns.twelve.omega
+    .row= render 'spree/shared/signup'

@@ -2,14 +2,31 @@ Spree::Core::Engine.routes.draw do
 
   root :to => 'home#index'
 
+  resources :users, :only => [:show]
+
+  devise_scope :users do
+    get '/login' => 'users/sessions#new', :as => :login
+    get '/signup' => 'users/registrations#new', :as => :signup
+    get '/password/recover' => 'users/passwords#new', :as => :recover_password
+    get '/password/change' => 'users/passwords#edit', :as => :edit_password
+  end
+
+  devise_for :users,
+    class_name: 'Spree::User',
+    controllers: {
+      sessions: 'spree/users/devise/sessions',
+      registrations: 'spree/users/devise/registrations',
+      passwords: 'spree/users/devise/passwords'
+    }
+  
   resources :products
   resources :stockpiles
   resources :listings do
-    resources :offer, :only => [:create, :index]
+    resources :offers, only: [:create, :index], controller: 'listings/offers'
   end
-  resources :offers, :only => [] do
-    resources :addresses, :only => [:create]
-    resources :users, :only => [:create]
+  resources :offers, only: [] do
+    resources :addresses, only: [:create, :new], controller: 'offers/addresses'
+    resources :users, only: [:create, :new], controller: 'offers/users'
   end
   resources :shops, :only => [:show]
 

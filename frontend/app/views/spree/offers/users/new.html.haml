@@ -1,0 +1,14 @@
+.offers-new-new
+  - @body_id = 'offers-new-new'
+  .columns.twelve.alpha{ "data-hook" => "stockpile_left_part" }
+    .row{ "data-hook" => "stockpile_left_part_wrap" }
+      %h1= @offer.name
+      %h6
+        = Spree.t(:step_three_of_three)
+        = link_to "(#{Spree.t(:back)})", stockpile_path(@offer.stockpile)
+  .columns.six.alpha
+    .row
+      = render partial: 'user_form', locals: { offer: @offer }
+  .columns.six.omega
+    .row
+      = render partial: 'signin_form'
