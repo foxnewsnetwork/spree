@@ -159,6 +159,20 @@ describe Spree::Order do
     end
   end
 
+  context "creates shipments cost" do
+    let(:shipment) { double }
+
+    before { order.stub shipments: [shipment] }
+
+    it "update and persist totals" do
+      expect(shipment).to receive :update_amounts
+      expect(order.updater).to receive :update_shipment_total
+      expect(order.updater).to receive :persist_totals
+
+      order.set_shipments_cost
+    end
+  end
+
   context "#finalize!" do
     let(:order) { Spree::Order.create }
     it "should set completed_at" do
@@ -366,12 +380,18 @@ describe Spree::Order do
   end
 
   context "empty!" do
-    it "should clear out all line items and adjustments" do
-      order = stub_model(Spree::Order)
+    let(:order) { stub_model(Spree::Order) }
+    
+    before do
       order.stub(:line_items => line_items = [])
       order.stub(:adjustments => adjustments = [])
-      order.line_items.should_receive(:destroy_all)
-      order.adjustments.should_receive(:destroy_all)
+    end
+
+    it "clears out line items, adjustments and update totals" do
+      expect(order.line_items).to receive(:destroy_all)
+      expect(order.adjustments).to receive(:destroy_all)
+      expect(order.updater).to receive(:update_totals)
+      expect(order.updater).to receive(:persist_totals)
 
       order.empty!
     end
@@ -434,6 +454,13 @@ describe Spree::Order do
       lambda { order_2.reload }.should raise_error(ActiveRecord::RecordNotFound)
     end
 
+    context "user is provided" do
+      it "assigns user to new order" do
+        order_1.merge!(order_2, user)
+        expect(order_1.user).to eq user
+      end
+    end
+
     context "merging together two orders with line items for the same variant" do
       before do
         order_1.contents.add(variant, 1)
@@ -471,10 +498,31 @@ describe Spree::Order do
   end
 
   context "#confirmation_required?" do
-    it "does not bomb out when an order has an unpersisted payment" do
-      order = Spree::Order.new
-      order.payments.build
-      assert !order.confirmation_required?
+
+    context 'Spree::Config[:always_include_confirm_step] == true' do
+
+      before do
+        Spree::Config[:always_include_confirm_step] = true
+      end
+
+      it "returns true if payments empty" do
+        order = Spree::Order.new
+        assert order.confirmation_required?
+      end
+    end
+
+    context 'Spree::Config[:always_include_confirm_step] == false' do
+
+      it "returns false if payments empty and Spree::Config[:always_include_confirm_step] == false" do
+        order = Spree::Order.new
+        assert !order.confirmation_required?
+      end
+
+      it "does not bomb out when an order has an unpersisted payment" do
+        order = Spree::Order.new
+        order.payments.build
+        assert !order.confirmation_required?
+      end
     end
   end
 
@@ -493,7 +541,7 @@ describe Spree::Order do
       # Don't care about available payment methods in this test
       persisted_order.stub(:has_available_payment => false)
       persisted_order.line_items << line_item
-      persisted_order.adjustments.create(:amount => -line_item.amount, :label => "Promotion")
+      create(:adjustment, :amount => -line_item.amount, :label => "Promotion", :adjustable => line_item)
       persisted_order.state = 'delivery'
       persisted_order.save # To ensure new state_change event
     end
@@ -502,22 +550,6 @@ describe Spree::Order do
       persisted_order.stub(payment_required?: true)
       persisted_order.next!
       persisted_order.state.should == "payment"
-    end
-  end
-
-  context "promotion adjustments" do
-    let(:originator) { double("Originator", id: 1) }
-    let(:adjustment) { double("Adjustment", originator: originator) }
-
-    before { order.stub_chain(:adjustments, :includes, :promotion, reload: [adjustment]) }
-
-    context "order has an adjustment from given promo action" do
-      it { expect(order.promotion_credit_exists? originator).to be_true }
-    end
-
-    context "order has no adjustment from given promo action" do
-      before { originator.stub(id: 12) }
-      it { expect(order.promotion_credit_exists? originator).to be_true }
     end
   end
 

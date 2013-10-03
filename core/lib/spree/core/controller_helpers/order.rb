@@ -42,14 +42,6 @@ module Spree
             @order.associate_user!(try_spree_current_user) if @order.user.blank? || @order.email.blank?
           end
 
-          # This will trigger any "first order" promotions to be triggered
-          # Assuming of course that this session variable was set correctly in
-          # the authentication provider's registrations controller
-          if session[:spree_user_signup] && @order
-            fire_event('spree.user.signup', user: try_spree_current_user, order: @order)
-            session[:spree_user_signup] = nil
-          end
-
           session[:guest_token] = nil
         end
 
@@ -59,7 +51,7 @@ module Spree
             if session[:order_id].nil? && last_incomplete_order
               session[:order_id] = last_incomplete_order.id
             elsif current_order(true) && last_incomplete_order && current_order != last_incomplete_order
-              current_order.merge!(last_incomplete_order)
+              current_order.merge!(last_incomplete_order, user)
             end
           end
         end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Checkout" do
+describe "Checkout", inaccessible: true do
 
   let!(:country) { create(:country, :states_required => true) }
   let!(:state) { create(:state, :country => country) }
@@ -22,7 +22,7 @@ describe "Checkout" do
         click_button "Checkout"
       end
 
-      it "should default checkbox to checked" do
+      it "should default checkbox to checked", inaccessible: true do
         find('input#order_use_billing').should be_checked
       end
 
@@ -35,6 +35,7 @@ describe "Checkout" do
     # Regression test for #1596
     context "full checkout" do
       before do
+        shipping_method.calculator.preferred_amount = 10
         mug.shipping_category = shipping_method.shipping_categories.first
         mug.save!
       end
@@ -49,19 +50,7 @@ describe "Checkout" do
         click_button "Save and Continue"
         page.should_not have_content("undefined method `promotion'")
         click_button "Save and Continue"
-        page.should have_content(shipping_method.adjustment_label)
-      end
-
-      # Regression test, no issue number
-      it "does not create a closed adjustment for an order's shipment upon reaching the delivery step", :js => true do
-        add_mug_to_cart
-        click_button "Checkout"
-
-        fill_in "order_email", :with => "ryan@spreecommerce.com"
-        fill_in_address
-
-        click_button "Save and Continue"
-        Spree::Order.last.shipments.first.adjustment.state.should_not == "closed"
+        page.should have_content("Shipping total:  $10.00")
       end
     end
   end
@@ -82,7 +71,7 @@ describe "Checkout" do
       Spree::CheckoutController.any_instance.stub(:skip_state_validation? => true)
     end
 
-    it "redirects to payment page" do
+    it "redirects to payment page", inaccessible: true do
       visit spree.checkout_state_path(:delivery)
       click_button "Save and Continue"
       choose "Credit Card"
@@ -256,9 +245,9 @@ describe "Checkout" do
   end
 
   context "in coupon promotion, submits coupon along with payment", js: true do
-    let!(:promotion) { Spree::Promotion.create(name: "Huhuhu", event_name: "spree.checkout.coupon_code_added", code: "huhu") }
+    let!(:promotion) { Spree::Promotion.create(name: "Huhuhu", code: "huhu") }
     let!(:calculator) { Spree::Calculator::FlatPercentItemTotal.create(preferred_flat_percent: "10") }
-    let!(:action) { Spree::Promotion::Actions::CreateAdjustment.create(calculator: calculator) }
+    let!(:action) { Spree::Promotion::Actions::CreateItemAdjustments.create(calculator: calculator) }
 
     before do
       promotion.actions << action

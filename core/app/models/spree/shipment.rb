@@ -10,10 +10,12 @@ module Spree
     has_many :shipping_methods, through: :shipping_rates
     has_many :state_changes, as: :stateful
     has_many :inventory_units, dependent: :delete_all
-    has_one :adjustment, as: :source, dependent: :destroy
+    has_many :adjustments, as: :adjustable, dependent: :delete_all
 
     before_create :generate_shipment_number
-    after_save :ensure_correct_adjustment, :update_order
+    after_save :update_adjustments
+
+    before_validation :set_cost_zero_when_nil
 
     attr_accessor :special_instructions
 
@@ -103,11 +105,14 @@ module Spree
     def refresh_rates
       return shipping_rates if shipped?
 
+      # StockEstimator.new assigment below will replace the current shipping_method
+      original_shipping_method_id = shipping_method.try(:id)
+
       self.shipping_rates = Stock::Estimator.new(order).shipping_rates(to_package)
 
       if shipping_method
         selected_rate = shipping_rates.detect { |rate|
-          rate.shipping_method_id == shipping_method.id
+          rate.shipping_method_id == original_shipping_method_id
         }
         self.selected_shipping_rate_id = selected_rate.id if selected_rate
       end
@@ -119,34 +124,21 @@ module Spree
       order ? order.currency : Spree::Config[:currency]
     end
 
-    # The adjustment amount associated with this shipment (if any.)  Returns only the first adjustment to match
-    # the shipment but there should never really be more than one.
-    def cost
-      adjustment ? adjustment.amount : 0
-    end
-
-    alias_method :amount, :cost
-
     def display_cost
       Spree::Money.new(cost, { currency: currency })
     end
-
-    alias_method :display_amount, :display_cost
+    alias display_amount display_cost
 
     def item_cost
       line_items.map(&:amount).sum
     end
 
+    def discounted_cost
+      cost + promo_total
+    end
+
     def display_item_cost
       Spree::Money.new(item_cost, { currency: currency })
-    end
-
-    def total_cost
-      cost + item_cost
-    end
-
-    def display_total_cost
-      Spree::Money.new(total_cost, { currency: currency })
     end
 
     def editable_by?(user)
@@ -229,6 +221,18 @@ module Spree
       self.inventory_units.create(variant_id: variant.id, state: state, order_id: order.id)
     end
 
+    def persist_cost
+      self.cost = selected_shipping_rate.cost
+      update_amounts
+    end
+
+    def update_amounts
+      self.update_columns(
+        cost: selected_shipping_rate.cost,
+        adjustment_total: adjustments.map(&:update!).compact.sum
+      )
+    end
+
     private
 
       def manifest_unstock(item)
@@ -261,30 +265,34 @@ module Spree
 
       def after_ship
         inventory_units.each &:ship!
-        adjustment.finalize!
+        adjustments.map(&:finalize!)
         send_shipped_email
         touch :shipped_at
+        update_order_shipment_state
+      end
+
+      def update_order_shipment_state
+        new_state = OrderUpdater.new(order).update_shipment_state
+        order.update_column(:shipment_state, new_state)
       end
 
       def send_shipped_email
         ShipmentMailer.shipped_email(self.id).deliver
       end
 
-      def ensure_correct_adjustment
-        if adjustment
-          adjustment.originator = shipping_method
-          adjustment.label = shipping_method.adjustment_label
-          adjustment.amount = selected_shipping_rate.cost if adjustment.open?
-          adjustment.save!
-          adjustment.reload
-        elsif selected_shipping_rate_id
-          shipping_method.create_adjustment shipping_method.adjustment_label, order, self, true, "open"
-          reload #ensure adjustment is present on later saves
+      def set_cost_zero_when_nil
+        self.cost = 0 unless self.cost
+      end
+
+
+      def update_adjustments
+        if cost_changed? && state != 'shipped'
+          recalculate_adjustments
         end
       end
 
-      def update_order
-        order.update!
+      def recalculate_adjustments
+        Spree::ItemAdjustments.new(self).update
       end
   end
 end

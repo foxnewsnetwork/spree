@@ -1,10 +1,7 @@
 module Spree
-  class Promotion < Spree::Activator
+  class Promotion < ActiveRecord::Base
     MATCH_POLICIES = %w(all any)
     UNACTIVATABLE_ORDER_STATES = ["complete", "awaiting_return", "returned"]
-
-    Activator.event_names << 'spree.checkout.coupon_code_added'
-    Activator.event_names << 'spree.content.visited'
 
     has_many :promotion_rules, foreign_key: :activator_id, autosave: true, dependent: :destroy
     alias_method :rules, :promotion_rules
@@ -17,8 +14,7 @@ module Spree
     validates_associated :rules
 
     validates :name, presence: true
-    validates :code, presence: true, if: lambda{|r| r.event_name == 'spree.checkout.coupon_code_added' }
-    validates :path, presence: true, if: lambda{|r| r.event_name == 'spree.content.visited' }
+    validates :path, uniqueness: true
     validates :usage_limit, numericality: { greater_than: 0, allow_nil: true }
 
     # TODO: This shouldn't be necessary with :autosave option but nested attribute updating of actions is broken without it
@@ -32,41 +28,41 @@ module Spree
       where(advertise: true)
     end
 
-    def self.with_code
-      where(event_name: 'spree.checkout.coupon_code_added')
+    def self.active
+      where('starts_at IS NULL OR starts_at < ?', Time.now).
+        where('expires_at IS NULL OR expires_at > ?', Time.now)
+    end
+
+    def expired?
+      starts_at && Time.now < starts_at || expires_at && Time.now > expires_at
     end
 
     def activate(payload)
       return unless order_activatable? payload[:order]
 
-      # make sure code is always downcased (old databases might have mixed case codes)
-      if code.present?
-        event_code = payload[:coupon_code]
-        return unless event_code == self.code.downcase.strip
-      end
-
-      if path.present?
-        return unless path == payload[:path]
-      end
-
-      actions.each do |action|
+      # Track results from actions to see if any action has been taken.
+      # Actions should return nil/false if no action has been taken.
+      # If an action returns true, then an action has been taken.
+      results = actions.map do |action|
         action.perform(payload)
       end
+      # If an action has been taken, report back to whatever activated this promotion.
+      return results.include?(true)
     end
 
     # called anytime order.update! happens
-    def eligible?(order)
-      return false if expired? || usage_limit_exceeded?(order)
-      rules_are_eligible?(order, {})
+    def eligible?(promotable)
+      return false if expired? || usage_limit_exceeded?(promotable)
+      rules_are_eligible?(promotable, {})
     end
 
-    def rules_are_eligible?(order, options = {})
+    def rules_are_eligible?(promotable, options = {})
       return true if rules.none?
-      eligible = lambda { |r| r.eligible?(order, options) }
+      eligible = lambda { |r| r.eligible?(promotable, options) }
       if match_policy == 'all'
-        rules.all?(&eligible)
+        rules.for(promotable).all?(&eligible)
       else
-        rules.any?(&eligible)
+        rules.for(promotable).any?(&eligible)
       end
     end
 
@@ -81,25 +77,24 @@ module Spree
       end.flatten.uniq
     end
 
-    def usage_limit_exceeded?(order = nil)
-      usage_limit.present? && usage_limit > 0 && adjusted_credits_count(order) >= usage_limit
+    def product_ids
+      products.map(&:id)
     end
 
-    def adjusted_credits_count(order)
-      return credits_count if order.nil?
-      credits_count - (order.promotion_credit_exists?(self) ? 1 : 0)
+    def usage_limit_exceeded?(promotable)
+      usage_limit.present? && usage_limit > 0 && adjusted_credits_count(promotable) >= usage_limit
+    end
+
+    def adjusted_credits_count(promotable)
+      credits_count - promotable.adjustments.promotion.where(:source_id => actions.pluck(:id)).count
     end
 
     def credits
-      Adjustment.promotion.where(originator_id: actions.map(&:id))
+      Adjustment.promotion.where(source_id: actions.map(&:id))
     end
 
     def credits_count
       credits.count
-    end
-
-    def code=(coupon_code)
-      write_attribute(:code, (coupon_code.downcase.strip rescue nil))
     end
   end
 end

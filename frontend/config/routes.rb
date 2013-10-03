@@ -7,6 +7,7 @@ Spree::Core::Engine.routes.draw do
   get '/locale/set', :to => 'locale#set'
 
   # non-restful checkout stuff
+  get '/checkout/summary', :to => 'checkout#summary'
   patch '/checkout/update/:state', :to => 'checkout#update', :as => :update_checkout
   get '/checkout/:state', :to => 'checkout#edit', :as => :checkout_state
   get '/checkout', :to => 'checkout#edit' , :as => :checkout
@@ -19,7 +20,7 @@ Spree::Core::Engine.routes.draw do
   get '/orders/populate', :via => :get, :to => populate_redirect
   get '/orders/:id/token/:token' => 'orders#show', :as => :token_order
 
-  resources :orders do
+  resources :orders, :except => [:new, :create] do
     post :populate, :on => :collection
   end
 

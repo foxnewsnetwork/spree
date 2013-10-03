@@ -9,7 +9,6 @@ module Spree
       go_to_state :address
       go_to_state :delivery
       go_to_state :payment, if: ->(order) {
-        order.update_totals
         order.payment_required?
       }
       go_to_state :confirm, if: ->(order) { order.confirmation_required? }
@@ -41,6 +40,9 @@ module Spree
     has_many :return_authorizations, dependent: :destroy
     has_many :adjustments, -> { order("#{Adjustment.table_name}.created_at ASC") }, as: :adjustable, dependent: :destroy
     has_many :line_item_adjustments, through: :line_items, source: :adjustments
+    has_many :shipment_adjustments, through: :shipments, source: :adjustments
+    has_many :all_adjustments, class_name: Spree::Adjustment
+    has_many :inventory_units
 
     has_many :shipments, dependent: :destroy do
       def states
@@ -61,12 +63,10 @@ module Spree
     attr_accessor :use_billing
 
     before_create :link_by_email
-    after_create :create_tax_charge!
 
     validates :email, presence: true, if: :require_email
     validates :email, email: true, if: :require_email, allow_blank: true
     validate :has_available_shipment
-    validate :has_available_payment
 
     make_permalink field: :number
 
@@ -159,7 +159,11 @@ module Spree
 
     # If true, causes the confirmation step to happen during the checkout process
     def confirmation_required?
-      payments.map(&:payment_method).compact.any?(&:payment_profiles_supported?)
+      if payments.empty? and Spree::Config[:always_include_confirm_step]
+        true
+      else
+        payments.map(&:payment_method).compact.any?(&:payment_profiles_supported?)
+      end
     end
 
     # Indicates the number of items in the order
@@ -189,17 +193,7 @@ module Spree
     def tax_address
       Spree::Config[:tax_using_ship_address] ? ship_address : bill_address
     end
-
-    # Array of totals grouped by Adjustment#label. Useful for displaying line item
-    # adjustments on an invoice. For example, you can display tax breakout for
-    # cases where tax is included in price.
-    def line_item_adjustment_totals
-      Hash[self.line_item_adjustments.eligible.group_by(&:label).map do |label, adjustments|
-        total = adjustments.sum(&:amount)
-        [label, Spree::Money.new(total, { currency: currency })]
-      end]
-    end
-
+    
     def updater
       @updater ||= OrderUpdater.new(self)
     end
@@ -224,13 +218,6 @@ module Spree
     def allow_cancel?
       return false unless completed? and state != 'canceled'
       shipment_state.nil? || %w{ready backorder pending}.include?(shipment_state)
-    end
-
-    def allow_resume?
-      # we shouldn't allow resume for legacy orders b/c we lack the information
-      # necessary to restore to a previous state
-      return false if state_changes.empty? || state_changes.last.previous_state.nil?
-      true
     end
 
     def awaiting_returns?
@@ -282,17 +269,14 @@ module Spree
     end
 
     def ship_total
-      adjustments.shipping.map(&:amount).sum
-    end
-
-    def tax_total
-      adjustments.tax.map(&:amount).sum
+      shipments.sum(:cost)
     end
 
     # Creates new tax charges if there are any applicable rates. If prices already
     # include taxes then price adjustments are created instead.
     def create_tax_charge!
-      Spree::TaxRate.adjust(self)
+      Spree::TaxRate.adjust(self, line_items)
+      Spree::TaxRate.adjust(self, shipments)
     end
 
     def outstanding_balance
@@ -418,10 +402,10 @@ module Spree
     end
 
     def insufficient_stock_lines
-      line_items.select &:insufficient_stock?
+     @insufficient_stock_lines ||= line_items.select(&:insufficient_stock?)
     end
 
-    def merge!(order)
+    def merge!(order, user = nil)
       order.line_items.each do |line_item|
         next unless line_item.currency == currency
         current_line_item = self.line_items.find_by(variant: line_item.variant)
@@ -433,6 +417,9 @@ module Spree
           line_item.save
         end
       end
+
+      self.associate_user!(user) if !self.user && !user.blank?
+
       # So that the destroy doesn't take out line items which may have been re-assigned
       order.line_items.reload
       order.destroy
@@ -441,11 +428,8 @@ module Spree
     def empty!
       line_items.destroy_all
       adjustments.destroy_all
-    end
-
-    def clear_adjustments!
-      self.adjustments.destroy_all
-      self.line_item_adjustments.destroy_all
+      updater.update_totals
+      updater.persist_totals
     end
 
     def has_step?(step)
@@ -467,20 +451,6 @@ module Spree
 
     def coupon_code=(code)
       @coupon_code = code.strip.downcase rescue nil
-    end
-
-    # Tells us if there if the specified promotion is already associated with the order
-    # regardless of whether or not its currently eligible. Useful because generally
-    # you would only want a promotion action to apply to order no more than once.
-    #
-    # Receives an adjustment +originator+ (here a PromotionAction object) and tells
-    # if the order has adjustments from that already
-    def promotion_credit_exists?(originator)
-      !! adjustments.includes(:originator).promotion.reload.detect { |credit| credit.originator.id == originator.id }
-    end
-
-    def promo_total
-      adjustments.eligible.promotion.map(&:amount).sum
     end
 
     def shipped?
@@ -515,6 +485,17 @@ module Spree
       shipments.map &:refresh_rates
     end
 
+    def shipping_eq_billing_address?
+      (bill_address.empty? && ship_address.empty?) || bill_address.same_as?(ship_address)
+    end
+
+  
+    def set_shipments_cost
+      shipments.each(&:update_amounts)
+      updater.update_shipment_total
+      updater.persist_totals
+    end
+
     private
 
       def link_by_email
@@ -545,16 +526,15 @@ module Spree
         end
       end
 
-      def has_available_payment
-        return unless delivery?
-        # errors.add(:base, :no_payment_methods_available) if available_payment_methods.empty?
-      end
-
       def after_cancel
         shipments.each { |shipment| shipment.cancel! }
 
-        OrderMailer.cancel_email(self.id).deliver
+        send_cancel_email
         self.payment_state = 'credit_owed' unless shipped?
+      end
+
+      def send_cancel_email
+        OrderMailer.cancel_email(self.id).deliver
       end
 
       def after_resume

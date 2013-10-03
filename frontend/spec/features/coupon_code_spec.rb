@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Promotion adjustments", :js => true do
+describe "Coupon code promotions", :js => true do
   let!(:country) { create(:country, :name => "United States of America", :states_required => true) }
   let!(:state) { create(:state, :name => "Alabama", :country => country) }
   let!(:zone) { create(:zone) }
@@ -12,14 +12,13 @@ describe "Promotion adjustments", :js => true do
     def create_basic_coupon_promotion(code)
       promotion = Spree::Promotion.create!(:name       => code.titleize,
                                            :code       => code,
-                                           :event_name => "spree.checkout.coupon_code_added",
                                            :starts_at  => 1.day.ago,
                                            :expires_at => 1.day.from_now)
 
      calculator = Spree::Calculator::FlatRate.new
      calculator.preferred_amount = 10
 
-     action = Spree::Promotion::Actions::CreateAdjustment.new
+     action = Spree::Promotion::Actions::CreateItemAdjustments.new
      action.calculator = calculator
      action.promotion = promotion
      action.save
@@ -59,11 +58,20 @@ describe "Promotion adjustments", :js => true do
         page.should have_content(Spree.t(:coupon_code_not_found))
       end
 
+      it "can enter an invalid coupon code, then a real one" do
+        fill_in "order_coupon_code", :with => "coupon_codes_rule_man"
+        click_button "Save and Continue"
+        page.should have_content(Spree.t(:coupon_code_not_found))
+        fill_in "order_coupon_code", :with => "onetwo"
+        click_button "Save and Continue"
+        page.should have_content("Promotion (Onetwo)   $-10.00")
+      end
+
       context "with a promotion" do
         it "applies a promotion to an order" do
           fill_in "order_coupon_code", :with => "onetwo"
           click_button "Save and Continue"
-          page.should have_content(Spree.t(:coupon_code_applied))
+          page.should have_content("Promotion (Onetwo)   $-10.00")
         end
       end
     end
@@ -96,28 +104,6 @@ describe "Promotion adjustments", :js => true do
         fill_in "order_coupon_code", :with => "onetwo"
         click_button "Update"
         page.should have_content(Spree.t(:coupon_code_max_usage))
-      end
-
-      context "informs the user if the previous promotion is better" do
-        before do
-          better_promotion = create_basic_coupon_promotion("50off")
-          calculator = better_promotion.actions.first.calculator
-          calculator.preferred_amount = 50
-          calculator.save
-        end
-
-        specify do
-          visit spree.cart_path
-
-          fill_in "order_coupon_code", :with => "50off"
-          click_button "Update"
-          page.should have_content(Spree.t(:coupon_code_applied))
-
-          fill_in "order_coupon_code", :with => "onetwo"
-          click_button "Update"
-
-          page.should have_content(Spree.t(:coupon_code_better_exists))
-        end
       end
 
       context "informs the user if the coupon code is not eligible" do
@@ -169,8 +155,11 @@ describe "Promotion adjustments", :js => true do
           fill_in "order_line_items_attributes_1_quantity", :with => 2
           click_button "Update"
 
+
           within '#cart_adjustments' do
-            # 20% off $60 item_total (2x $10 + 2x $20)
+            # 20% of $40 = 8
+            # 20% of $20 = 4
+            # Therefore: promotion discount amount is $12.
             page.should have_content("Promotion (Onetwo) $-12.00")
           end
           within '.order-total' do

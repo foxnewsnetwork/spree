@@ -2,22 +2,25 @@ require 'spec_helper'
 
 module Spree
   describe Order do
-    let!(:country) { FactoryGirl.create(:country) }
-    let!(:state) { country.states.first || FactoryGirl.create(:state, :country => country) }
-    let!(:stock_location) { FactoryGirl.create(:stock_location) }
+    let!(:country) { create(:country) }
+    let!(:state) { country.states.first || create(:state, :country => country) }
+    let!(:stock_location) { create(:stock_location) }
 
     let(:user) { stub_model(LegacyUser, :email => 'fox@mudler.com') }
     let(:shipping_method) { create(:shipping_method) }
     let(:payment_method) { create(:payment_method) }
+
     let(:product) { product = Spree::Product.create(:name => 'Test',
                                            :sku => 'TEST-1',
                                            :price => 33.22)
-                    product.shipping_category = FactoryGirl.create(:shipping_category)
+                    product.shipping_category = create(:shipping_category)
                     product.save
                     product }
+
     let(:variant) { variant = product.master
                     variant.stock_items.each { |si| si.update_attribute(:count_on_hand, 10) }
                     variant }
+
     let(:sku) { variant.sku }
     let(:variant_id) { variant.id }
 
@@ -47,6 +50,12 @@ module Spree
       order = Order.build_from_api(user, params)
       order.should be_completed
       order.state.should eq 'complete'
+    end
+
+    it "assigns order[email] over user email to order" do
+      params = { email: 'wooowww@test.com' }
+      order = Order.build_from_api(user, params)
+      expect(order.email).to eq params[:email]
     end
 
     it 'can build an order from API with just line items' do
@@ -164,6 +173,13 @@ module Spree
       end
     end
 
+    it "raises with proper message when cant find country" do
+      address = { :country => { "name" => "NoNoCountry" } }
+      expect {
+        Order.ensure_country_id_from_api(address)
+      }.to raise_error /NoNoCountry/
+    end
+
     it 'ensures_state_id for state fields' do
       [:name, :abbr].each do |field|
         address = { :state => { field => state.send(field) }}
@@ -172,12 +188,20 @@ module Spree
       end
     end
 
+    it "raises with proper message when cant find state" do
+      address = { :state => { "name" => "NoNoState" } }
+      expect {
+        Order.ensure_state_id_from_api(address)
+      }.to raise_error /NoNoState/
+    end
+
     context "shippments" do
       let(:params) do
         { :shipments_attributes => [
             { :tracking => '123456789',
               :cost => '4.99',
               :shipping_method => shipping_method.name,
+              :stock_location => stock_location.name,
               :inventory_units => [{ :sku => sku }]
             }
         ] }
@@ -195,6 +219,14 @@ module Spree
         shipment.inventory_units.first.variant_id.should eq product.master.id
         shipment.tracking.should eq '123456789'
         shipment.shipping_rates.first.cost.should eq 4.99
+        shipment.stock_location.should eq stock_location
+      end
+
+      it "raises if cant find stock location" do
+        params[:shipments_attributes][0][:stock_location] = "doesnt exist"
+        expect {
+          order = Order.build_from_api(user, params)
+        }.to raise_error
       end
     end
 
@@ -243,6 +275,16 @@ module Spree
       expect {
         order = Order.build_from_api(user, params)
       }.to raise_error /XXX/
+    end
+
+    context "raises error" do
+      it "clears out order from db" do
+        params = { :payments_attributes => [{ payment_method: "XXX" }] }
+        count = Order.count
+
+        expect { order = Order.build_from_api(user, params) }.to raise_error
+        expect(Order.count).to eq count
+      end
     end
   end
 end

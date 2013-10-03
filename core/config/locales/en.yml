@@ -300,6 +300,7 @@ en:
     additional_item: Additional Item Cost
     address1: Address
     address2: Address (contd.)
+    adjustable: Adjustable
     adjustment: Adjustment
     adjustment_amount: Amount
     adjustment_successfully_closed: Adjustment has been successfully closed!
@@ -395,6 +396,7 @@ en:
     capture: Capture
     card_code: Card Code
     card_number: Card Number
+    card_type: Brand
     card_type_is: Card type is
     cart: Cart
     categories: Categories
@@ -549,6 +551,7 @@ en:
     fill_in_customer_info: Please fill in customer info
     filter_results: Filter Results
     finalize: Finalize
+    finalized: Finalized
     first_item: First Item Cost
     first_name: First Name
     first_name_begins_with: First Name Begins With
@@ -619,6 +622,7 @@ en:
     last_name: Last Name
     last_name_begins_with: Last Name Begins With
     learn_more: Learn More
+    line_item_adjustments: "Line item adjustments"
     list: List
     listing_countries: Listing Countries
     listing_orders: Listing Orders
@@ -639,7 +643,6 @@ en:
     login_name: Login
     logout: Logout
     look_for_similar_items: Look for similar items
-    maestro_or_solo_cards: Maestro/Solo cards
     mail_method_settings: Mail Method Settings
     mail_methods: Mail Methods
     make_refund: Make refund
@@ -751,6 +754,7 @@ en:
     order_number: Order
     order_populator:
       out_of_stock: ! '%{item} is out of stock.'
+      selected_quantity_not_available: ! 'Selected quantity of %{item} is not available.'
       please_enter_reasonable_quantity: Please enter a reasonable quantity.
     order_processed_successfully: Your order has been processed successfully
     order_state:
@@ -835,6 +839,9 @@ en:
       create_adjustment:
         description: Creates a promotion credit adjustment on the order
         name: Create adjustment
+      create_item_adjustment:
+        description: Creates a promotion credit adjustment on a line item
+        name: Create order item adjustment
       create_line_items:
         description: Populates the cart with the specified quantity of variant
         name: Create line items
@@ -936,6 +943,7 @@ en:
     ship_address: Ship Address
     ship_total: Ship Total
     shipment: Shipment
+    shipment_adjustments: "Shipment adjustments"
     shipment_inc_vat: Shipment including VAT
     shipment_mailer:
       shipped_email:
@@ -966,6 +974,7 @@ en:
     shipping_method: Shipping Method
     shipping_methods: Shipping Methods
     shipping_price_sack: Price sack
+    shipping_total: Shipping total
     shop_by_taxonomy: Shop by %{taxonomy}
     shopping_cart: Shopping Cart
     show: Show
@@ -990,7 +999,6 @@ en:
     split: Split
     spree_gateway_error_flash_for_checkout: There was a problem with your payment information. Please check your information and try again.
     start: Start
-    start_date: Valid from
     state: State
     state_based: State Based
     states: States

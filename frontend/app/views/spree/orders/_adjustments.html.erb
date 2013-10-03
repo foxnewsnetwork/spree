@@ -4,11 +4,13 @@
   </tr>
 </thead>
 <tbody id="cart_adjustments" data-hook>
-  <% @order.adjustments.eligible.each do |adjustment| %>
-    <tr>
-      <td colspan="4"><%= adjustment.label %></td>
-      <td><%= adjustment.display_amount.to_html %></td>
-      <td></td>
-    </tr>
+  <% @order.line_item_adjustments.eligible.group_by(&:label).each do |label, adjustments| %>
+    <%= render "spree/orders/adjustment_row", :label => label, :adjustments => adjustments %>
+  <% end %>
+  <% @order.shipment_adjustments.eligible.group_by(&:label).each do |label, adjustments| %>
+    <%= render "spree/orders/adjustment_row", :label => label, :adjustments => adjustments %>
+  <% end %>
+  <% @order.adjustments.eligible.group_by(&:label).each do |label, adjustments| %>
+    <%= render "spree/orders/adjustment_row", :label => label, :adjustments => adjustments %>
   <% end %>
 </tbody>

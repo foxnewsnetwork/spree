@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'spree/promo/coupon_applicator'
 
 module Spree
   describe Api::CheckoutsController do
@@ -28,6 +27,12 @@ module Spree
 
         json_response['number'].should be_present
         response.status.should == 201
+      end
+
+      it "assigns email when creating a new order" do
+        api_post :create, :order => { :email => "guest@spreecommerce.com" }
+        expect(json_response['email']).not_to eq controller.current_api_user
+        expect(json_response['email']).to eq "guest@spreecommerce.com"
       end
     end
 
@@ -176,6 +181,14 @@ module Spree
         response.status.should == 200
       end
 
+      # Regression test for #3784
+      it "can update the special instructions for an order" do
+        instructions = "Don't drop it. (Please)"
+        api_put :update, :id => order.to_param, :order_token => order.token,
+          :order => { :special_instructions => instructions }
+        expect(json_response['special_instructions']).to eql(instructions)
+      end
+
       context "as an admin" do
         sign_in_as_admin!
         it "can assign a user to the order" do
@@ -196,17 +209,11 @@ module Spree
       end
 
       it "can apply a coupon code to an order" do
-        order.update_column(:state, "payment")
-        Spree::Promo::CouponApplicator.should_receive(:new).with(order).and_call_original
-        Spree::Promo::CouponApplicator.any_instance.should_receive(:apply).and_return({:coupon_applied? => true})
-        api_put :update, :id => order.to_param, :order_token => order.token, :order => { :coupon_code => "foobar" }
-      end
+        pending "ensure that the order totals are properly updated, see frontend orders_controller or checkout_controller as example"
 
-      it "can apply a coupon code to an order" do
         order.update_column(:state, "payment")
-        Spree::Promo::CouponApplicator.should_receive(:new).with(order).and_call_original
-        coupon_result = { :coupon_applied? => true }
-        Spree::Promo::CouponApplicator.any_instance.should_receive(:apply).and_return(coupon_result)
+        PromotionHandler::Coupon.should_receive(:new).with(order).and_call_original
+        PromotionHandler::Coupon.any_instance.should_receive(:apply).and_return({:coupon_applied? => true})
         api_put :update, :id => order.to_param, :order_token => order.token, :order => { :coupon_code => "foobar" }
       end
     end
