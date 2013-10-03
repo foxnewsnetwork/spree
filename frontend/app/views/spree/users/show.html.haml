@@ -1,0 +1,14 @@
+- if @user == current_user
+  = content_for :sidebar do
+    %nav.user-command-panel
+      %h6= Spree.t(:your_command_panel)
+      %ul
+        %li= "#edit"
+        %li= "#accouting"
+
+
+.user-show
+  - @body_id = "user-details"
+  .columns.ten.omega
+    .row
+      = @user.email

@@ -35,7 +35,8 @@ class Spree::Listings::OffersController < Spree::StoreController
   end
 
   def _offer_params
-    params.require(:offer).permit(:containers, :shipping_terms, :usd_per_pound)
+    vanilla_offer = params.require(:offer).permit(:containers, :shipping_terms, :usd_per_pound)
+    vanilla_offer.initializing_merge user: current_user
   end
 
   def _address_params
