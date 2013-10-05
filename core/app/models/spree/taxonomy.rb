@@ -3,6 +3,9 @@ module Spree
     validates :name, presence: true
 
     has_many :taxons
+    has_many :child_taxons,
+      -> { where "parent_id is not null" },
+      class_name: 'Spree::Taxon'
     has_one :root, -> { where parent_id: nil }, class_name: "Spree::Taxon", dependent: :destroy
 
     after_save :set_name

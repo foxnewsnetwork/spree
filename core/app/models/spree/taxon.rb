@@ -26,8 +26,8 @@ module Spree
     include Spree::Core::ProductFilters  # for detailed defs of filters
 
     class << self
-      def plastic_types
-        @plastic_types ||= Spree::Taxonomy.find_by_name!("Categories").taxons.map(&:name)
+      def plastics
+        @plastics ||= Spree::Taxonomy.find_by_name!("Categories").child_taxons
       end
     end
 

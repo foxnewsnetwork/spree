@@ -2,8 +2,8 @@
   %fieldset.listing-form
     %legend= Spree.t(:new_listing)
     %dl
-      %dt= f.label :tags, Spree.t(:material_description)
-      %dd= f.token_field :tags, tokens: [:dog, :cat, :bat, :nigger]
+      %dt= f.label :category, Spree.t(:plastic_category)
+      %dd= f.select :category, Spree::Taxon.plastics.map(&:name)
       %dt= f.label :weight, Spree.t(:weight_available)
       %dd= f.number_field :weight
       %dt= f.label :available_on
