@@ -23,8 +23,9 @@ Spree::Core::Engine.routes.draw do
   resources :stockpiles
   resources :listings do
     resources :offers, only: [:create, :index], controller: 'listings/offers'
+    resources :stockpiles, only: [:new], controller: 'listings/stockpiles'
   end
-  resources :offers, only: [] do
+  resources :offers, only: [:show] do
     resources :addresses, only: [:create, :new], controller: 'offers/addresses'
     resources :users, only: [:create, :new], controller: 'offers/users'
   end

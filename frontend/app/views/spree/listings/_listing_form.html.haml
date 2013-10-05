@@ -1,0 +1,14 @@
+= form_for :listing, url: listings_path, builder: Spree::FormBuilder do |f|
+  %fieldset.listing-form
+    %legend= Spree.t(:new_listing)
+    %dl
+      %dt= f.label :tags, Spree.t(:material_description)
+      %dd= f.token_field :tags, tokens: [:dog, :cat, :bat, :nigger]
+      %dt= f.label :weight, Spree.t(:weight_available)
+      %dd= f.number_field :weight
+      %dt= f.label :available_on
+      %dd= f.date_field :availble_on
+      %dt= f.label :expires_on
+      %dd= f.date_field :expires_on
+    .form-actions
+      = f.submit

@@ -21,5 +21,13 @@ module Spree
       end.last
     end
 
+    def require_shop?
+      shop.blank?
+    end
+
+    def require_stockpile?
+      stockpile.blank?
+    end
+
   end
 end

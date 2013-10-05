@@ -28,5 +28,8 @@ module Spree
       email =~ /@example.net$/ ? true : false
     end
 
+    def shop_id
+      shop.try(:id)
+    end
   end
 end

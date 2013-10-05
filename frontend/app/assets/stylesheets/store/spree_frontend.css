@@ -1,5 +1,6 @@
 /*
-* This is a manifest file that includes stylesheets for spree_frontend 
+* This is a manifest file that includes stylesheets for spree_frontend
+ *= require bootstrap-tokenfield/bootstrap-tokenfield/bootstrap-tokenfield
  *= require normalize
  *= require skeleton
  *= require store/screen

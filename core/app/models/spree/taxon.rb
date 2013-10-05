@@ -25,6 +25,12 @@ module Spree
 
     include Spree::Core::ProductFilters  # for detailed defs of filters
 
+    class << self
+      def plastic_types
+        @plastic_types ||= Spree::Taxonomy.find_by_name!("Categories").taxons.map(&:name)
+      end
+    end
+
     # indicate which filters should be used for a taxon
     # this method should be customized to your own site
     def applicable_filters

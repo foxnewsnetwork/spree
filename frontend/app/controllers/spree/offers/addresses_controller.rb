@@ -3,13 +3,13 @@ class Spree::Offers::AddressesController < Spree::StoreController
   def create
     _attach_address_to_offer!
     return _user_step if _offer.requires_buyer?
-    return _error_step if _offer.errors?
+    return _error_step if _offer.errors.any?
     return _success_step
   end
 
   def new
     _offer
-    _address_params
+    _get_address_params
   end
 
   private
@@ -23,12 +23,12 @@ class Spree::Offers::AddressesController < Spree::StoreController
   end
 
   def _attach_address_to_offer!
-    _offer.address = _address
+    _offer.address = _address!
     _offer.save!
   end
 
-  def _address
-    @address ||= Spree::Address.find_or_create_by _address_params
+  def _address!
+    @address ||= Spree::Address.find_roughly_or_create_by _address_params
   end
 
   def _user_step
@@ -40,14 +40,14 @@ class Spree::Offers::AddressesController < Spree::StoreController
   end
 
   def _address_params
-    @address_params ||= _get_address_params.initializing_merge _post_address_params
+    @address_params = _get_address_params.initializing_merge _post_address_params
   end
 
   def _get_address_params
-    params.permit(:country, :city, :state)
+    @address_params = params.permit(:country, :city, :state)
   end
 
   def _post_address_params
-    params.permit(:address).permit(:address1, :address2, :country, :city, :state, :zipcode)
+    @address_params = params.permit(:address => [:address1, :address2, :country, :city, :state, :zipcode])[:address]
   end
 end

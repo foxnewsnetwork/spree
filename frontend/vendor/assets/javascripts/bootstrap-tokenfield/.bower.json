@@ -1,0 +1,21 @@
+{
+  "name": "bootstrap-tokenfield",
+  "version": "0.9.5",
+  "main": [
+    "bootstrap-tokenfield/bootstrap-tokenfield.js",
+    "bootstrap-tokenfield/bootstrap-tokenfield.css"
+  ],
+  "dependencies": {
+    "jquery": "1.9.x"
+  },
+  "homepage": "https://github.com/sliptree/bootstrap-tokenfield",
+  "_release": "0.9.5",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.9.5",
+    "commit": "8881c53d4516e47ecb8158895ffcc83e87b9415e"
+  },
+  "_source": "git://github.com/sliptree/bootstrap-tokenfield.git",
+  "_target": "~0.9.5",
+  "_originalSource": "bootstrap-tokenfield"
+}

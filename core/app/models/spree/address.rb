@@ -7,16 +7,35 @@ module Spree
 
     validates :address1, :city, :country, presence: true
     validates :zipcode, presence: true, if: :require_zipcode?
-    validates :phone, presence: true, if: :require_phone?
 
     validate :state_validate
 
     alias_attribute :first_name, :firstname
     alias_attribute :last_name, :lastname
 
-    def self.default
-      country = Spree::Country.find(Spree::Config[:default_country_id]) rescue Spree::Country.first
-      new(country: country)
+    CoreAttributes = [:address1, :address2, :city, :state, :country]
+    class << self
+      def roughup_params(params)
+        a = params.to_a.filter_map do |kv|
+          :state.to_s == kv.first.to_s
+        end.call do |kv|
+          [:state_id, Spree::State.normalize(kv.last.to_i).id]
+        end.filter_map do |kv|
+          :country.to_s == kv.first.to_s
+        end.call do |kv|
+          [:country_id, Spree::Country.normalize(kv.last.to_i).id]
+        end
+        Hash[a]
+      end
+
+      def find_roughly_or_create_by(params)
+        find_or_create_by! roughup_params params
+      end
+
+      def default
+        country = Spree::Country.find(Spree::Config[:default_country_id]) rescue Spree::Country.first
+        new(country: country)
+      end
     end
 
     # Can modify an address if it's not been used in an order (but checkouts controller has finer control)
