@@ -2,10 +2,12 @@
   %fieldset.listing-form
     %legend= Spree.t(:new_listing)
     %dl
-      %dt= f.label :category, Spree.t(:plastic_category)
-      %dd= f.select :category, Spree::Taxon.plastics.map(&:name)
+      %dt= f.label :material, Spree.t(:plastic_category)
+      %dd= f.select :material, Spree::Taxon.plastics.map(&:name)
       %dt= f.label :weight, Spree.t(:weight_available)
-      %dd= f.number_field :weight
+      %dd
+        = f.number_field :weight
+        %span.boxed= Spree.t(:pounds)
       %dt= f.label :available_on
       %dd= f.date_field :availble_on
       %dt= f.label :expires_on

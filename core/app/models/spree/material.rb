@@ -13,6 +13,16 @@ module Spree
 
     before_destroy :_punch_permalink
 
+    class << self
+      def all_as_options_array
+        @_all_as_options_array ||= all.map(&:to_options_array)
+      end
+    end
+
+    def to_options_array
+      [name, id]
+    end
+
     private
     def _punch_permalink
       update_attribute :permalink, "#{Time.now.to_i}_#{permalink}" # punch permalink with date prefix

@@ -1,0 +1,9 @@
+.new-listing
+  - @body_id = "new-stockkpiles-address"
+
+  .columns.four.alpha
+    .row
+      = render partial: 'spree/listings/sideview', locals: { listing: @stockpile.listing }
+  .columns.twelve.omega
+    .row
+      = render partial: 'address_form', locals: { stockpile: @stockpile }

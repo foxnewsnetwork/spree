@@ -3,8 +3,7 @@
 
   .columns.four.alpha
     .row
-      %h1.title= Spree.t(:new_listing)
-      %h6= Spree.t(:step_one_of_three)
+      = render 'sideview'
   .columns.twelve.omega
     .row
       = render 'listing_form'

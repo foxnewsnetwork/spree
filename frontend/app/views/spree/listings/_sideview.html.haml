@@ -1,0 +1,16 @@
+- listing ||= nil
+%h1.title= Spree.t(:new_listing)
+%h6= Spree.t(:data_so_far)
+%dl
+  %dt= Spree.t(:material_summary)
+  %dd= listing.try(:stockpile).try(:name) || Spree.t(:not_specified_yet)
+  %dt= Spree.t(:weight)
+  %dd= listing.try(:stockpile).try(:weight) || Spree.t(:not_specified_yet)
+  %dt= Spree.t(:available_on)
+  %dd= listing.try(:available_on) || Spree.t(:right_now)
+  %dt= Spree.t(:expires_on)
+  %dd= listing.try(:expires_on) || Spree.t(:until_sold)
+  %dt= Spree.t(:sold_by)
+  %dd= h listing.try(:shop).try(:name) || Spree.t(:you)
+  %dt= Spree.t(:located_at)
+  %dd= listing.try(:stockpile).try(:permalink_name) || Spree.t(:not_specified_yet)

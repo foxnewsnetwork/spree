@@ -9,7 +9,7 @@ module Spree
       -> { completed },
       class_name: 'Spree::Offer'
 
-    delegate :name, :to => :stockpile
+    delegate :name, :require_address?, :to => :stockpile
 
     def seller_offer
       offers.where(id: shop.user_id).first
@@ -27,6 +27,14 @@ module Spree
 
     def require_stockpile?
       stockpile.blank?
+    end
+
+    def complete?
+      !incomplete?
+    end
+
+    def incomplete?
+      require_stockpile? || require_shop?
     end
 
   end

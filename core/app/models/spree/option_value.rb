@@ -9,5 +9,16 @@ module Spree
       join_table: 'spree_option_values_stockpiles',
       class_name: 'Spree::Stockpile'
     validates :name, :presentation, presence: true
+    before_create :_process_name
+
+    def to_options_array
+      [presentation, id]
+    end
+
+    private
+
+    def _process_name
+      self.name = self.name.split(" ").reject(&:blank?).map(&:singularize).map(&:downcase).join
+    end 
   end
 end

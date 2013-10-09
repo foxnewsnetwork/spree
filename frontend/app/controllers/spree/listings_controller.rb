@@ -1,5 +1,4 @@
 class Spree::ListingsController < Spree::StoreController
-
   def new; end
 
   def create
@@ -16,7 +15,7 @@ class Spree::ListingsController < Spree::StoreController
   end
 
   def _stockpile_params
-    params.require(:listing).permit(:tags, :weight)
+    params.require(:listing).permit(:material, :weight)
   end
 
   def _create_listing!

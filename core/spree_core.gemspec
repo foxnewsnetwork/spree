@@ -38,5 +38,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'truncate_html', '0.9.2'
   s.add_dependency 'devise', '~> 3.0.1'
   s.add_dependency 'devise-encryptable', '0.1.2'
-  s.add_dependency 'functional_support', '>=0.0.2'
+  s.add_dependency 'functional_support', '>=0.0.4'
 end

@@ -18,5 +18,10 @@ Spree::OptionType.create!([
     :name => "plastics-process-state",
     :presentation => "Process State",
     :position => 3
+  },
+  {
+    :name => "plastics-origin-product",
+    :presentation => "Origin Product",
+    :position => 3
   }
 ])

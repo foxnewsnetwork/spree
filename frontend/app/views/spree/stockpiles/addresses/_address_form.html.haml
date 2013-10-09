@@ -1,0 +1,18 @@
+= form_for :address, url: stockpile_addresses_path(stockpile) do |f|
+  %fieldset
+    %legend= Spree.t(:listing_location)
+    %dl
+      %dt= f.label :address1, Spree.t(:street_address)
+      %dd= f.text_field :address1
+      %dt= f.label :address2, Spree.t(:secondary_address)
+      %dd= f.text_field :address2
+      %dt= f.label :city, Spree.t(:city)
+      %dd= f.text_field :city
+      %dt= f.label :zipcode
+      %dd= f.text_field :zipcode
+      %dt= f.label :state
+      %dd= f.select :state, options_for_select(Spree::State.all_names)
+      %dt= f.label :country
+      %dd= f.select :country, options_for_select(Spree::Country.all_names)
+    .form-action
+      = f.submit

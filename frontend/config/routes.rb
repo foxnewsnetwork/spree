@@ -20,10 +20,13 @@ Spree::Core::Engine.routes.draw do
     }
   
   resources :products
-  resources :stockpiles
+  resources :stockpiles do
+    resources :addresses, only: [:new, :create], controller: 'stockpiles/addresses'
+  end
   resources :listings do
+    resources :shops, only: [:new, :create], controller: 'listings/shops'
     resources :offers, only: [:create, :index], controller: 'listings/offers'
-    resources :stockpiles, only: [:new], controller: 'listings/stockpiles'
+    resources :stockpiles, only: [:new, :create], controller: 'listings/stockpiles'
   end
   resources :offers, only: [:show] do
     resources :addresses, only: [:create, :new], controller: 'offers/addresses'

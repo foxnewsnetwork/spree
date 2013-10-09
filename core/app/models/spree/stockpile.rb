@@ -18,6 +18,14 @@ module Spree
       4000
     end
 
+    def require_shop?
+      shop.blank?
+    end
+
+    def require_address?
+      address.blank?
+    end
+
     def containers_on_hand
       pounds_on_hand / container_weight unless container_weight.nil?
     end

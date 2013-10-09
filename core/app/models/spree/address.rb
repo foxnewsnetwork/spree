@@ -19,11 +19,11 @@ module Spree
         a = params.to_a.filter_map do |kv|
           :state.to_s == kv.first.to_s
         end.call do |kv|
-          [:state_id, Spree::State.normalize(kv.last.to_i).id]
+          [:state_id, Spree::State.normalize(kv.last).id]
         end.filter_map do |kv|
           :country.to_s == kv.first.to_s
         end.call do |kv|
-          [:country_id, Spree::Country.normalize(kv.last.to_i).id]
+          [:country_id, Spree::Country.normalize(kv.last).id]
         end
         Hash[a]
       end

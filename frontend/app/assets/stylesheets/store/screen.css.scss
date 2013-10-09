@@ -1,6 +1,25 @@
 @import 'variables';
 @import 'products';
 @import 'stockpiles';
+
+/*--------------------------------------*/
+/* Form styles
+/*--------------------------------------*/
+form {
+  .boxed {
+    border-top: 1px solid #d9d9db;
+    border-bottom: 1px solid #d9d9db;
+    border-right: 1px solid #d9d9db;
+    margin-left: -3px;
+    padding-top: 6px;
+    padding-bottom: 5px;
+    padding-right: 3px;
+    padding-left: 2px;
+    font-weight: bold;
+  }
+}
+
+
 /*--------------------------------------*/
 /* Basic styles
 /*--------------------------------------*/
@@ -1066,3 +1085,4 @@ table.order-summary {
     text-align: center;
   }
 }
+
