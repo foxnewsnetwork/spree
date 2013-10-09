@@ -12,6 +12,12 @@ module Spree
       dependent: :destroy, 
       class_name: "Spree::Image"
 
+    has_many :variant_images, 
+      -> { order(:position) }, 
+      as: :viewable, 
+      dependent: :destroy, 
+      class_name: "Spree::Image"
+
     delegate :available_on, :expires_on, :seller_offer, :offers, :to => :listing
 
     def container_weight

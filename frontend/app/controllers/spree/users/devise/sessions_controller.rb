@@ -23,8 +23,8 @@ class Spree::Users::Devise::SessionsController < Devise::SessionsController
 
   def _return_path
     return login_path if resource.blank?
-    return request.referer if request.referer.present?
     return params[:back] if params[:back].present?
+    return request.referer if request.referer.present?
     return root_path
   end
 end

@@ -4,4 +4,4 @@
 .offers-login-new
   - @body_id = 'users-login-new'
   .columns.twelve.omega
-    .row= render 'spree/shared/login'
+    .row= render 'spree/shared/login', back: @back_path

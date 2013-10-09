@@ -1,0 +1,14 @@
+= form_for :stockpile, url: listing_shop_path(listing), multipart: true do |f|
+  %fieldset
+    %legend= Spree.t(:listing_pictures)
+    %dl
+      %dt= f.label :name, Spree.t(:company_name)
+      %dd= f.text_field :name, current_user.shop.name
+      %dt= f.label :email, Spree.t(:company_email)
+      %dd= f.email_field :email, current_user.shop.email
+      %dt= f.label :image, Spree.t(:material_picture)
+      %dd= f.file_field :image
+    %ul.uploaded-images
+      = render partial: 'image', collection: listing.images
+    .form-action
+      = f.submit

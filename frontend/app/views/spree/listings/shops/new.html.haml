@@ -1,0 +1,9 @@
+.new-listing
+  - @body_id = "new-listing-shops"
+
+  .columns.four.alpha
+    .row
+      = render partial: 'spree/listings/sideview', locals: { listing: @listing }
+  .columns.twelve.omega
+    .row
+      = render partial: 'shop_form', locals: { listing: @listing }
