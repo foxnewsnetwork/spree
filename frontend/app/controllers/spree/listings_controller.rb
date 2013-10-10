@@ -1,11 +1,14 @@
 class Spree::ListingsController < Spree::StoreController
+
+  def show
+    redirect_to stockpile_path Spree::Listing.find(params[:id]).stockpile
+  end
+
   def new; end
 
   def create
     _create_listing!
-    return _goto_stockpile_step   if _require_stockpile?
-    return _goto_shop_step        if _require_shop?
-    return _goto_complete_listing if _complete?
+    _goto_stockpile_step
   end
 
   private
@@ -24,22 +27,6 @@ class Spree::ListingsController < Spree::StoreController
 
   def _listing_maker
     current_user.try(:shop).try(:listings) || Spree::Listing
-  end
-
-  def _complete?
-    !_incomplete?
-  end
-
-  def _incomplete?
-    _require_shop? || require_stockpile?
-  end
-
-  def _require_shop?
-    @listing.require_shop?
-  end
-
-  def _require_stockpile?
-    @listing.require_stockpile?
   end
 
   def _listing_params

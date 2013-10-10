@@ -6,7 +6,7 @@ Spree::Sample.load_sample("listings")
 categories = Spree::Taxonomy.find_by_name!("Categories")
 companies = Spree::Taxonomy.find_by_name!("Company")
 locations = Spree::Taxonomy.find_by_name! "Location"
-processes = Spree::Taxonomy.find_by_name! "Process State"
+origins = Spree::Taxonomy.find_by_name! "Origin Product"
 packages = Spree::Taxonomy.find_by_name! "Packaging"
 
 
@@ -25,8 +25,8 @@ taxons = [
     taxonomy: locations
   },
   {
-    name: "Process State", 
-    taxonomy: processes
+    name: "Origin Product", 
+    taxonomy: origins
   },
   {
     name: "Packaging", 
@@ -74,17 +74,27 @@ end.call do |a,b|
   a
 end
 
-statement = ["presentation = ? or presentation = ?", 'Packaging', 'Process State']
+taxons += Spree::OriginProduct.all.map do |op|
+  {
+    name: op.permalink,
+    taxonomy: origins,
+    parent: origins.name,
+    position: 4,
+    stockpiles: op.stockpiles
+  }
+end
+
+statement = ["presentation = ?", 'Packaging']
 taxons += Spree::OptionType.where(*statement).map(&:option_values).flatten.map do |option_value|
-  p = option_value.option_type.presentation == "Packaging" ? packages : processes
   {
     name: option_value.name,
-    taxonomy: p,
-    parent: p.name,
-    position: 4,
+    taxonomy: packages,
+    parent: packages.name,
+    position: 5,
     stockpiles: option_value.stockpiles
   }
 end
+
 
 taxons.each do |taxon_attrs|
   if taxon_attrs[:parent]

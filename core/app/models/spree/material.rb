@@ -17,6 +17,14 @@ module Spree
       def all_as_options_array
         @_all_as_options_array ||= all.map(&:to_options_array)
       end
+
+      def normalize!(id_name_permalink)
+        return id_name_permalink if id_name_permalink.is_a? self
+        return find(id_name_permalink) if id_name_permalink.is_a? Integer
+        find_by_permalink(id_name_permalink) ||
+        find_by_name(id_name_permalink) || 
+        find_by_id!(id_name_permalink)
+      end
     end
 
     def to_options_array
@@ -29,3 +37,4 @@ module Spree
     end
   end
 end
+

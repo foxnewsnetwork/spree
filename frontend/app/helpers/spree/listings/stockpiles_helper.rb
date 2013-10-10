@@ -15,7 +15,7 @@ module Spree::Listings::StockpilesHelper
   private
 
   def _something_options_for_select!(something)
-    Spree::OptionType.find_by_presentation!(something).option_values.map(&:to_options_array)
+    Spree::OptionType.find_by_presentation!(something).option_values.map(&:presentation)
   end
 
   def _material_options
@@ -23,7 +23,7 @@ module Spree::Listings::StockpilesHelper
   end
 
   def _material_options_from_params
-    material = Spree::Material.find_by_name params[:material]
+    material = Spree::Material.normalize! params[:material]
     material.try(:to_options_array)
   end
 

@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  permalink: MyString
+  presentation: MyString
+
+two:
+  permalink: MyString
+  presentation: MyString

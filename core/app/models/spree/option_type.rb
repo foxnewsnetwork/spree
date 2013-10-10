@@ -8,5 +8,15 @@ module Spree
     default_scope -> { order("#{self.table_name}.position") }
 
     accepts_nested_attributes_for :option_values, reject_if: lambda { |ov| ov[:name].blank? || ov[:presentation].blank? }, allow_destroy: true
+
+
+    class << self
+      def material_origin
+        @material_origin ||= find_or_create_by name: "plastics-origin-product",
+          presentation: "Product Origin",
+          position: 3
+      end
+    end
   end
+
 end

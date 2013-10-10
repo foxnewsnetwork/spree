@@ -18,7 +18,20 @@ module Spree
       dependent: :destroy, 
       class_name: "Spree::Image"
 
+    has_many :origin_relationships,
+      class_name: 'Spree::OriginProductsStockpiles',
+      dependent: :destroy
+
+    has_many :origin_products,
+      throught: :origin_relationships
+
     delegate :available_on, :expires_on, :seller_offer, :offers, :to => :listing
+
+    validates :pounds_on_hand, numericality: { greater_than_or_equal_to: 0 }, presence: true
+
+    def came_from!(origin_product)
+      origin_relationships.create! origin_product: origin_product
+    end
 
     def container_weight
       4000

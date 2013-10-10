@@ -2,7 +2,7 @@ taxonomies = [
   { :name => "Categories" },
   { :name => "Company" },
   { :name => "Location" },
-  { :name => "Process State" },
+  { :name => "Origin Product" },
   { :name => "Packaging" }
 ]
 

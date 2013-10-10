@@ -55,21 +55,6 @@ origin = Spree::OptionType.find_by_presentation! "Origin Product"
 
 Spree::OptionValue.create!([
   {
-    name: 'laptop',
-    presentation: 'Laptops',
-    option_type: origin
-  },
-  {
-    name: 'creditcard',
-    presentation: 'Credit Cards',
-    option_type: origin
-  },
-  {
-    name: "milkjug",
-    presentation: "Milk Jugs",
-    option_type: origin
-  },
-  {
     name: "Supersacks",
     presentation: "Supersacks",
     option_type: packaging

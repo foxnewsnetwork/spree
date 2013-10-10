@@ -30,6 +30,7 @@ module SpreeSample
       Spree::Sample.load_sample("users")
       Spree::Sample.load_sample("shops")
       Spree::Sample.load_sample("stockpiles")
+      Spree::Sample.load_sample("origin_products")
       Spree::Sample.load_sample("listings")
       Spree::Sample.load_sample("taxons")
       Spree::Sample.load_sample("offers")
