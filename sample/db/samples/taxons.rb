@@ -76,7 +76,7 @@ end
 
 taxons += Spree::OriginProduct.all.map do |op|
   {
-    name: op.permalink,
+    name: op.presentation,
     taxonomy: origins,
     parent: origins.name,
     position: 4,

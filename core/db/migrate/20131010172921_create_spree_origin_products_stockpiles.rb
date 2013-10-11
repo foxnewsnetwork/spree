@@ -5,6 +5,9 @@ class CreateSpreeOriginProductsStockpiles < ActiveRecord::Migration
       t.integer :stockpile_id, null: false
     end
     add_index :spree_origin_products_stockpiles, [:stockpile_id]
-    add_index :spree_origin_products_stockpiles, [:origin_product_id, :stockpile_id], unique: true
+    add_index :spree_origin_products_stockpiles, 
+      [:origin_product_id, :stockpile_id], 
+      unique: true,
+      name: 'indx_ops_opid_sid'
   end
 end

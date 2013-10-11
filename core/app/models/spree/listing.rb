@@ -37,7 +37,7 @@ module Spree
     end
 
     def incomplete?
-      require_stockpile? || require_shop?
+      require_stockpile? || require_shop? || require_address?
     end
 
   end

@@ -51,7 +51,6 @@ Spree::OptionValue.create!([
 
 process = Spree::OptionType.find_by_presentation! "Process State"
 packaging = Spree::OptionType.find_by_presentation! "Packaging"
-origin = Spree::OptionType.find_by_presentation! "Origin Product"
 
 Spree::OptionValue.create!([
   {

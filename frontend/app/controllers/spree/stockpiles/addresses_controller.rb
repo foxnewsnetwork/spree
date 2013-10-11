@@ -1,24 +1,40 @@
 class Spree::Stockpiles::AddressesController < Spree::StoreController
-  rescue_from ActiveRecord::RecordNotFound, :with => :render_404
+  rescue_from ActiveRecord::RecordNotFound, with: :_manage_exceptions
+  rescue_from ActiveRecord::RecordInvalid, with: :_manage_exceptions
 
+  before_filter :_consider_skipping_to_next_step
   def new
     _stockpile
   end
 
   def create
     _attach_address_to_stockpile!
-    return _goto_shop_step if _require_shop?
-    return _goto_complete_step if _complete?
+    _goto_shop_step
   end
 
   private
 
-  def _goto_shop_step
-    redirect_to new_listing_shop_path _stockpile.listing
+  def _manage_exceptions(e)
+    handler = Spree::Stockpiles::Addresses::ExceptionHandler.new e
+    flash[:error] = handler.flash_message
+    return _reload_this_step if handler.user_input_error?
+    render_404
   end
 
-  def _require_shop?
-    _stockpile.require_shop?
+  def _reload_this_step
+    redirect_to new_stockpile_address_path(_stockpile, _address_params)
+  end
+
+  def _consider_skipping_to_next_step
+    _goto_shop_step unless _require_address?
+  end
+
+  def _require_address?
+    _stockpile.require_address?
+  end
+
+  def _goto_shop_step
+    redirect_to new_listing_shop_path _stockpile.listing
   end
 
   def _attach_address_to_stockpile!

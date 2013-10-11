@@ -1,4 +1,4 @@
-class Spree::Listings::Stockpiles::ErrorManager
+class Spree::Listings::ExceptionHandler
   def initialize(exception)
     @exception = exception
   end
@@ -54,12 +54,10 @@ class Spree::Listings::Stockpiles::ErrorManager
   end
 
   def _bad_material?
-    @exception.message =~ /Couldn't find Spree::Material without an ID/
+    @exception.message =~ /Spree::Material/i
   end
 
   def _material_message
     Spree.t(:you_need_to_gave_a_valid_plastic_material)
   end
-
-
 end

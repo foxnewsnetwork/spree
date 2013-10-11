@@ -4,13 +4,22 @@
     %dl
       %dt= f.label :material, Spree.t(:plastic_category)
       %dd= f.select :material, Spree::Taxon.plastics.map(&:name)
+      %dt= f.label :origin_products, Spree.t(:original_product)
+      %dd= f.text_field :origin_products, placeholder: "Milk Jugs"
       %dt= f.label :weight, Spree.t(:weight_available)
       %dd
         = f.number_field :weight
         %span.boxed= Spree.t(:pounds)
+      %dt= f.label :packaging, Spree.t(:packaging)
+      %dd= f.select :packaging, packaging_options_for_select, include_blank: true
+      %dt= f.label :process_state, Spree.t(:processing)
+      - options = process_state_options_for_select
+      %dd= f.select :process_state, options, multiple: true, include_blank: true
       %dt= f.label :available_on
       %dd= f.date_field :availble_on
       %dt= f.label :expires_on
       %dd= f.date_field :expires_on
+      %dt= f.label :notes
+      %dd= f.text_area :notes
     .form-actions
       = f.submit

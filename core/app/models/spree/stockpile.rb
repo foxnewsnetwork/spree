@@ -23,7 +23,7 @@ module Spree
       dependent: :destroy
 
     has_many :origin_products,
-      throught: :origin_relationships
+      through: :origin_relationships
 
     delegate :available_on, :expires_on, :seller_offer, :offers, :to => :listing
 
@@ -50,7 +50,7 @@ module Spree
     end
 
     def name
-      @name ||= "#{material.name} #{_option_value_names}"
+      @name ||= "#{material.name} #{_origin_product_names} #{_option_value_names}"
     end
 
     def image_name
@@ -80,6 +80,10 @@ module Spree
     end
 
     private
+
+    def _origin_product_names
+      origin_products.map(&:presentation).sort.join " "
+    end
 
     def _option_value_names
       option_values.map(&:presentation).sort.join " "
