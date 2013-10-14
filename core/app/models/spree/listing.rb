@@ -9,7 +9,7 @@ module Spree
       -> { completed },
       class_name: 'Spree::Offer'
     has_many :images,
-      through: :stockpiles,
+      through: :stockpile,
       class_name: 'Spree::Image'
 
     delegate :name, :require_address?, :to => :stockpile
