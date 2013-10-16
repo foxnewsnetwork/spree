@@ -1,7 +1,7 @@
-= content_for :sidebar do
-  %h1= Spree.t(:login)
-  
 .offers-login-new
   - @body_id = 'users-login-new'
-  .columns.twelve.omega
-    .row= render 'spree/shared/login', back: @back_path
+  .columns.sixteen.omega
+    .row
+      %h1= Spree.t(:account_gateway)
+      %h6= link_to Spree.t(:register_new_account), signup_path(back: @back_path)
+      = render 'spree/shared/login', back: @back_path

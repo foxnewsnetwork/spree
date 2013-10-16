@@ -1,7 +1,8 @@
 - back ||= {}
-= form_for :user, url: user_session_path back do |f|
+= form_for :user, url: user_session_path do |f|
   %fieldset
     %legend= Spree.t(:login)
+    = f.hidden_field :back, value: back[:back]
     %dl
       %dt= f.label :email
       %dd= f.email_field :email

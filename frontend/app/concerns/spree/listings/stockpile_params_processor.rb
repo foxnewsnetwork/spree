@@ -23,7 +23,7 @@ class Spree::Listings::StockpileParamsProcessor
       Spree::OptionValue.normalize! id
     end.access_map! :origin_products do |presentations|
       _origin_products_from_presentations presentations
-    end.alter_key_from!(:weight).to(:pounds_on_hand)
+    end
   end
 
   def _origin_products_from_presentations(presentations)
@@ -32,10 +32,10 @@ class Spree::Listings::StockpileParamsProcessor
 
   def _arrayify(string_or_array)
     return string_or_array if string_or_array.is_a? Array
-    string_or_array.split(",").map(&:split).reject(&:blank?)
+    string_or_array.split(",").map(&:strip).reject(&:blank?)
   end
 
   def _origin_product_from_presentation(presentation)
-    Spree::OriginProduct.find_by_permalink_but_create_by_presentation!(presentations)
+    Spree::OriginProduct.find_by_permalink_but_create_by_presentation!(presentation)
   end
 end

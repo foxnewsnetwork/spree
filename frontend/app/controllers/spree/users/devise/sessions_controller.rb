@@ -21,9 +21,17 @@ class Spree::Users::Devise::SessionsController < Devise::SessionsController
     @login_result ||= resource.present? && is_navigational_format?
   end
 
+  def _back_path
+    params[:user][:back]
+  end
+
+  def _go_back?
+    params[:user].present? && params[:user][:back].present?
+  end
+
   def _return_path
-    return login_path if resource.blank?
-    return params[:back] if params[:back].present?
+    return login_path(back: _back_path) if resource.blank?
+    return _back_path if _go_back?
     return request.referer if request.referer.present?
     return root_path
   end

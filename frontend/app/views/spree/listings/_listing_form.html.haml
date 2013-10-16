@@ -1,14 +1,15 @@
-= form_for :listing, url: listings_path, builder: Spree::FormBuilder do |f|
+- listing ||= :listing_form_helper
+= form_for listing, url: listings_path, builder: Spree::FormBuilder do |f|
   %fieldset.listing-form
     %legend= Spree.t(:new_listing)
     %dl
       %dt= f.label :material, Spree.t(:plastic_category)
-      %dd= f.select :material, Spree::Taxon.plastics.map(&:name)
+      %dd= f.select :material, Spree::Material.all_as_options_array
       %dt= f.label :origin_products, Spree.t(:original_product)
       %dd= f.text_field :origin_products, placeholder: "Milk Jugs"
-      %dt= f.label :weight, Spree.t(:weight_available)
+      %dt= f.label :pounds_on_hand, Spree.t(:weight_available)
       %dd
-        = f.number_field :weight
+        = f.number_field :pounds_on_hand
         %span.boxed= Spree.t(:pounds)
       %dt= f.label :packaging, Spree.t(:packaging)
       %dd= f.select :packaging, packaging_options_for_select, include_blank: true
@@ -16,10 +17,10 @@
       - options = process_state_options_for_select
       %dd= f.select :process_state, options, multiple: true, include_blank: true
       %dt= f.label :available_on
-      %dd= f.date_field :availble_on
+      %dd= f.date_field :available_on
       %dt= f.label :expires_on
       %dd= f.date_field :expires_on
       %dt= f.label :notes
       %dd= f.text_area :notes
     .form-actions
-      = f.submit
+      = f.submit value: "Next"

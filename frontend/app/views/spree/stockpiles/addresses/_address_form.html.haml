@@ -1,4 +1,5 @@
-= form_for :address, url: stockpile_addresses_path(stockpile) do |f|
+- address ||= :address_form_helper
+= form_for address, url: stockpile_addresses_path(stockpile) do |f|
   %fieldset
     %legend= Spree.t(:listing_location)
     %dl
@@ -15,4 +16,4 @@
       %dt= f.label :country
       %dd= f.select :country, options_for_select(Spree::Country.all_names)
     .form-action
-      = f.submit
+      = f.submit value: "Next"

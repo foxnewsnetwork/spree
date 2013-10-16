@@ -1,6 +1,5 @@
 class Spree::Stockpiles::AddressesController < Spree::StoreController
-  rescue_from ActiveRecord::RecordNotFound, with: :_manage_exceptions
-  rescue_from ActiveRecord::RecordInvalid, with: :_manage_exceptions
+  rescue_from ActiveRecord::RecordNotFound, with: :render_404
 
   before_filter :_consider_skipping_to_next_step
   def new
@@ -8,21 +7,27 @@ class Spree::Stockpiles::AddressesController < Spree::StoreController
   end
 
   def create
-    _attach_address_to_stockpile!
-    _goto_shop_step
+    if _valid?
+      _attach_address_to_stockpile!
+      _goto_shop_step
+    else
+      _handle_flash
+      _reload_this_step
+    end
   end
 
   private
 
-  def _manage_exceptions(e)
-    handler = Spree::Stockpiles::Addresses::ExceptionHandler.new e
-    flash[:error] = handler.flash_message
-    return _reload_this_step if handler.user_input_error?
-    render_404
+  def _handle_flash
+    flash[:error] = _form_helper.flash_message
   end
 
   def _reload_this_step
-    redirect_to new_stockpile_address_path(_stockpile, _address_params)
+    render "new"
+  end
+
+  def _valid?
+    _form_helper.valid?
   end
 
   def _consider_skipping_to_next_step
@@ -47,7 +52,15 @@ class Spree::Stockpiles::AddressesController < Spree::StoreController
   end
 
   def _address_params
-    params.require(:address).permit :address1,
+    _form_helper.address_params.symbolize_keys
+  end
+
+  def _form_helper
+    @form_helper ||= Spree::Stockpiles::Addresses::FormHelper.new _raw_address_params, _stockpile
+  end
+
+  def _raw_address_params
+    params.require(:address_form_helper).permit :address1,
       :address2,
       :city,
       :zipcode,

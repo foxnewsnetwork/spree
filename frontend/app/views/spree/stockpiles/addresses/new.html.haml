@@ -6,4 +6,4 @@
       = render partial: 'spree/listings/sideview', locals: { listing: @stockpile.listing }
   .columns.twelve.omega
     .row
-      = render partial: 'address_form', locals: { stockpile: @stockpile }
+      = render partial: 'address_form', locals: { stockpile: @stockpile, address: @form_helper }
