@@ -19,6 +19,10 @@ module Spree
       :require_address?, 
       :to => :stockpile
 
+    def owner
+      shop.user
+    end
+
     def seller_offer
       offers.where(id: shop.user_id).first
     end

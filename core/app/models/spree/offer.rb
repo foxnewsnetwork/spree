@@ -1,5 +1,6 @@
 module Spree
   class Offer < ActiveRecord::Base
+    acts_as_paranoid
     FAS = "FAS"
     CNF = "CNF"
     CIF = "CIF"
@@ -33,8 +34,10 @@ module Spree
       -> { where "user_id is not null" }
     scope :relevant,
       -> { where "listing_id is not null" }
+    scope :fresh,
+      -> { where("expires_at is null or expires_at > ?", Time.now) }
     scope :completed,
-      -> { destined.possessed.relevant }
+      -> { destined.possessed.relevant.fresh }
 
     def total_usd
       containers.to_i * usd_per_pound * PoundsPerContainer
@@ -60,7 +63,15 @@ module Spree
       requires_destination? || requires_buyer?
     end
 
+    def expired?
+      Time.now > _expiration_date
+    end
+
     private
+
+    def _expiration_date
+      expires_at.blank? ? 1000.years.from_now : expires_at
+    end
 
     def _shipping_summary
       return shipping_terms if shipping_terms == EXWORKS
