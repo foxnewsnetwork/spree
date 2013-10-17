@@ -29,6 +29,8 @@
     .row{ "data-hook" => "stockpile_right_part_wrap" }
       .stockpile-details
         %h1.stockpile-title= Spree.t(:seller_details)
+        - if correct_user_session? @stockpile.owner
+          = render partial: 'admin_action', locals: { stockpile: @stockpile }
         %dl
           %dt= Spree.t :company
           %dd= link_to h(@stockpile.shop.name), @stockpile.shop
@@ -41,4 +43,7 @@
 
     .row{ "data-hook" => "stockpile_right_part_wrap" }
       #escrow-form.escrow-form
-        = render partial: 'offer_form', locals: { listing: @stockpile.listing }
+        - if correct_user_session? @stockpile.owner
+          = render partial: 'admin_offer', locals: { listing: @stockpile.listing }
+        - else
+          = render partial: 'offer_form', locals: { listing: @stockpile.listing }

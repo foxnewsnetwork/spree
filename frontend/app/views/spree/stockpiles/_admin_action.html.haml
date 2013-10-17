@@ -1,0 +1,7 @@
+%h6= Spree.t(:this_item_belongs_to_you)
+%ul.horizontal-panel
+  %li= link_to Spree.t(:edit_listing), edit_stockpile_path(stockpile)
+  %li= link_to Spree.t(:edit_location), edit_address_stockpile_path(stockpile)
+  %li= link_to Spree.t(:edit_pictures), edit_picture_stockpile_path(stockpile)
+  %li= link_to Spree.t(:edit_base_offer), edit_seller_offer_stockpile_path(stockpile)
+  %li= link_to Spree.t(:delete_listing), stockpile_path(stockpile), method: :delete, data: { confirm: Spree.t(:are_you_sure) }

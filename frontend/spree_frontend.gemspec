@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'jquery-rails', '~> 3.0.0'
   s.add_dependency 'stringex', '~> 1.5.1'
   s.add_dependency 'haml', '~> 4.0.3'
+  s.add_dependency 'decent_exposure', '~>2.3.0'
 
   s.add_development_dependency 'email_spec', '~> 1.2.1'
 end

@@ -1,0 +1,15 @@
+= link_to Spree.t(:view_all), listing_offers_path(listing)
+%table.admin-offer
+  %thead
+    %tr
+      %th= Spree.t(:offer_from)
+      %th= Spree.t(:offer_date)
+      %th= Spree.t(:expiration_date)
+      %th= Spree.t(:buyer_credibility)
+      %th= Spree.t(:price)
+  %tbody
+    = render partial: "spree/stockpiles/admin_offer/offer", collection: listing.offers
+    - if listing.offers.blank?
+      %tr
+        %td
+          %h6= Spree.t(:no_offers_yet)

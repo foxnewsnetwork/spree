@@ -21,6 +21,11 @@ Spree::Core::Engine.routes.draw do
   
   resources :products
   resources :stockpiles do
+    member do
+      get :edit_address
+      get :edit_picture
+      get :edit_seller_offer
+    end
     resources :addresses, only: [:new, :create], controller: 'stockpiles/addresses'
   end
   resources :listings do

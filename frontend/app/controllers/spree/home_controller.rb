@@ -10,7 +10,7 @@ module Spree
     private
 
     def _stockpiles
-      @stockpiles ||= Spree::Stockpile.all
+      @stockpiles ||= Spree::Stockpile.completed
     end
   end
 end

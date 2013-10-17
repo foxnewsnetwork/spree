@@ -2,7 +2,7 @@
 = form_for :user, url: user_session_path do |f|
   %fieldset
     %legend= Spree.t(:login)
-    = f.hidden_field :back, value: back[:back]
+    = f.hidden_field :back, value: back[:back] if back[:back].present?
     %dl
       %dt= f.label :email
       %dd= f.email_field :email

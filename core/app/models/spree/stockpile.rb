@@ -1,8 +1,11 @@
 module Spree
   class Stockpile < ActiveRecord::Base
+    acts_as_paranoid
     belongs_to :material, :class_name => 'Spree::Material'
     belongs_to :address, :class_name => 'Spree::Address'
-    has_one :listing, :class_name => 'Spree::Listing'
+    has_one :listing, 
+      :class_name => 'Spree::Listing',
+      :dependent => :destroy
     has_one :shop, :class_name => 'Spree::Shop', through: :listing
     has_and_belongs_to_many :option_values, 
       join_table: :spree_option_values_stockpiles
@@ -28,6 +31,23 @@ module Spree
     delegate :available_on, :expires_on, :seller_offer, :offers, :to => :listing
 
     validates :pounds_on_hand, numericality: { greater_than_or_equal_to: 0 }, presence: true
+
+    scope :has_material,
+      -> { where "material_id is not null" }
+    scope :has_address,
+      -> { where "address_id is not null" }
+    scope :has_shop,
+      -> { joins(:listing).where("#{Spree::Listing.table_name}.shop_id is not null") }
+    scope :completed,
+      -> { has_material.has_address.has_shop }
+
+    def owner
+      shop.try(:user)
+    end
+
+    def completed?
+      listing.present? && material.present? && shop.present? && address.present?
+    end
 
     def came_from!(origin_product)
       origin_relationships.create! origin_product: origin_product

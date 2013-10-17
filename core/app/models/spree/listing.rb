@@ -1,7 +1,10 @@
 module Spree
   class Listing < ActiveRecord::Base
-    belongs_to :shop, class_name: 'Spree::Shop'
-    belongs_to :stockpile, class_name: 'Spree::Stockpile'
+    acts_as_paranoid
+    belongs_to :shop, 
+      class_name: 'Spree::Shop'
+    belongs_to :stockpile, 
+      class_name: 'Spree::Stockpile'
     has_one :address,
       through: :stockpile,
       class_name: 'Spree::Address'
@@ -12,7 +15,9 @@ module Spree
       through: :stockpile,
       class_name: 'Spree::Image'
 
-    delegate :name, :require_address?, :to => :stockpile
+    delegate :name, 
+      :require_address?, 
+      :to => :stockpile
 
     def seller_offer
       offers.where(id: shop.user_id).first
