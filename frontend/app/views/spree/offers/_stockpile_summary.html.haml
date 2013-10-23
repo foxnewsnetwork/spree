@@ -1,0 +1,17 @@
+%h6= Spree.t(:listing_summary)
+%dl
+  %dt= Spree.t(:listing_name)
+  %dd= link_to stockpile.name, stockpile_path(stockpile)
+  %dt= Spree.t(:listing_company)
+  %dd= link_to stockpile.shop.name, shop_path(stockpile.shop)
+  %dt= Spree.t(:location)
+  %dd= link_to stockpile.origination.permalink_name, "#not_implemented_map"
+  %dt= Spree.t(:quantity_available)
+  %dd
+    = stockpile.pounds_on_hand
+    = " lbs"
+  - if stockpile.minimum_weight.present?
+    %dt= Spree.t(:minimum_weight)
+    %dd
+      = stockpile.minimum_weight
+      = " lbs"

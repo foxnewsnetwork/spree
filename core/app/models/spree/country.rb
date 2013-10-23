@@ -10,6 +10,11 @@ module Spree
         return find_all_by_name_or_iso_name(whatever.to_s).first || find_by_id(whatever.to_i)
       end
 
+      def normalize!(whatever)
+        normalize(whatever) || find(whatever)
+      end
+
+
       def find_all_by_name_or_iso_name(name)
         where('name = ? OR iso_name = ?', name, name)
       end

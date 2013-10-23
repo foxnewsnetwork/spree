@@ -1,0 +1,7 @@
+%nav.seller-actions-panel
+  %h6= Spree.t(:offer_for_you_listing)
+  %ul.actions
+    %li= link_to Spree.t(:accept_offer), accept_offer_path(offer), method: :post, data: { confirm: Spree.t(:are_you_sure) }
+    %li= link_to Spree.t(:counteroffer), counter_offer_path(offer)
+    %li= link_to Spree.t(:comment_or_question), new_offer_comment_path(offer)
+    %li= link_to Spree.t(:upload_pictures), edit_stockpile_path(offer.stockpile)

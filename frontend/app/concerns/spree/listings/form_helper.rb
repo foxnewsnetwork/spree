@@ -6,9 +6,6 @@ class Spree::Listings::FormHelper
       end
     end
   end
-  class WeightValidator < ActiveModel::Validator
-
-  end
   include ActiveModel::Validations
   attr_accessor :material,
     :origin_products,

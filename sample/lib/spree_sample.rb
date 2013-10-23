@@ -34,6 +34,7 @@ module SpreeSample
       Spree::Sample.load_sample("listings")
       Spree::Sample.load_sample("taxons")
       Spree::Sample.load_sample("offers")
+      Spree::Sample.load_sample("comments")
     end
   end
 end

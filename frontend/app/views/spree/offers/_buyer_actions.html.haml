@@ -1,0 +1,7 @@
+%nav.buyer-actions-panel
+  %h6= Spree.t(:you_made_this_offer)
+  %ul.actions
+    %li= link_to Spree.t(:edit_offer), edit_offer_path(offer)
+    %li= link_to Spree.t(:counteroffer), counter_offer_path(offer)
+    %li= link_to Spree.t(:comment_or_question), new_offer_comment_path(offer)
+    %li= link_to Spree.t(:request_pictures_or_samples), demand_offer_comments_path(offer)

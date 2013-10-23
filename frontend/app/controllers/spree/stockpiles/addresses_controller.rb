@@ -1,8 +1,13 @@
 class Spree::Stockpiles::AddressesController < Spree::StoreController
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
 
-  before_filter :_consider_skipping_to_next_step
+  before_filter :_consider_skipping_to_next_step,
+    except: [:edit]
   def new
+    _stockpile
+  end
+
+  def edit
     _stockpile
   end
 

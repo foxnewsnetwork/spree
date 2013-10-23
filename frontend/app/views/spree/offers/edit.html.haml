@@ -1,0 +1,7 @@
+.offers-edit
+  - @body_id = 'offers-edit'
+  .columns-twelve-omega
+    .row
+      %h1= link_to @offer.name, offer_path(@offer)
+    .row
+      = render 'offer_form', offer: @offer_edit_helper

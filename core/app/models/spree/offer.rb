@@ -7,9 +7,16 @@ module Spree
     FOB = "FOB"
     EXWORKS = "EXWORKS"
     Terms = [FAS, CNF, CIF, FOB, EXWORKS]
+
+    Container = "CONTAINER"
+    Flatbed = "FLATBED"
+    TransportMethods = [Container, Flatbed]
     PoundsPerContainer = 40000
 
-    belongs_to :user
+    belongs_to :shop
+    belongs_to :buyer,
+      class_name: 'Spree::Shop',
+      foreign_key: 'shop_id'
     belongs_to :listing
     belongs_to :address
 
@@ -24,14 +31,25 @@ module Spree
     has_one :stockpile,
       through: :listing
 
-    validates :listing_id, presence: true
+    has_many :comments
 
+    validates :listing_id, presence: true
+    validates :transport_method, 
+      presence: true,
+      inclusion: { in: TransportMethods }
+    validates :shipping_terms,
+      presence: true,
+      inclusion: { in: Terms }
+    validates :usd_per_pound,
+      presence: true,
+      numericality: { greater_than: 0 }
+    before_validation :_upcase_transport_method
     delegate :name, :to => :listing
 
     scope :destined,
       -> { where("address_id is not null") }
     scope :possessed,
-      -> { where "user_id is not null" }
+      -> { where "shop_id is not null" }
     scope :relevant,
       -> { where "listing_id is not null" }
     scope :fresh,
@@ -40,11 +58,43 @@ module Spree
       -> { destined.possessed.relevant.fresh }
 
     def total_usd
-      containers.to_i * usd_per_pound * PoundsPerContainer
+      reasonable_load_count * usd_per_pound * PoundsPerContainer
+    end
+
+    def presentable_expires_at
+      expires_at.blank? ? Spree.t(:never) : expires_at.to_formatted_s(:long)
+    end
+
+    def presentable_minimum_weight
+      minimum_pounds_per_load.blank? ? Spree.t(:unspecified) : (minimum_pounds_per_load + " lbs")
+    end
+
+    def seller
+      listing.shop
+    end
+
+    def reasonable_load_count
+      return positive_load_count if positive_load_count < _fractional_max_containers
+      _fractional_max_containers
+    end
+
+    def presentable_quantity
+      [reasonable_load_count.to_i.to_s, 
+        transport_method.downcase.pluralize(reasonable_load_count)].join " "
     end
 
     def to_summary
-      "#{containers.to_i} containers @ #{usd_per_pound} / lbs " + _shipping_summary
+      [
+        presentable_quantity,
+        "$#{usd_per_pound}",
+        "/ lbs",
+        _shipping_summary
+      ].join " "
+    end
+
+    def positive_load_count
+      return loads.to_i unless loads.to_i.zero?
+      _fractional_max_containers
     end
 
     def requires_destination?
@@ -52,7 +102,7 @@ module Spree
     end
 
     def requires_buyer?
-      user.blank?
+      shop.blank?
     end
 
     def complete?
@@ -67,7 +117,19 @@ module Spree
       Time.now > _expiration_date
     end
 
+    def shipping_summary
+      _shipping_summary
+    end
+
     private
+
+    def _upcase_transport_method
+      self.transport_method = transport_method.strip.singularize.upcase
+    end
+
+    def _fractional_max_containers
+      listing.pounds_on_hand.to_f / PoundsPerContainer
+    end
 
     def _expiration_date
       expires_at.blank? ? 1000.years.from_now : expires_at

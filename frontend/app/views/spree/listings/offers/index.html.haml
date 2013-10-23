@@ -1,0 +1,9 @@
+= content_for :sidebar do
+  %nav.shop-panel
+    .stockpile-offers
+      = render partial: 'spree/stockpiles/listing_offers', locals: { listing: @listing }
+
+.listings-offers-index
+  - @body_id = "listings-offers-index"
+  .columns.twelve.omega
+    = render 'offers_table', listing: @listing

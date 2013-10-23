@@ -1,0 +1,7 @@
+%tr
+  %td= link_to offer.buyer.name, offer_path(offer)
+  %td= offer.created_at.to_formatted_s(:long)
+  %td= offer.presentable_expires_at
+  %td Not Implemented
+  %td= offer.to_summary
+  %td= offer.presentable_minimum_weight

@@ -3,6 +3,9 @@ module Spree
     acts_as_paranoid
     belongs_to :material, :class_name => 'Spree::Material'
     belongs_to :address, :class_name => 'Spree::Address'
+    belongs_to :origination,
+      class_name: 'Spree::Address',
+      foreign_key: 'address_id'
     has_one :listing, 
       :class_name => 'Spree::Listing',
       :dependent => :destroy
@@ -28,7 +31,12 @@ module Spree
     has_many :origin_products,
       through: :origin_relationships
 
-    delegate :available_on, :expires_on, :seller_offer, :offers, :to => :listing
+    delegate :minimum_weight,
+      :available_on, 
+      :expires_on, 
+      :seller_offer, 
+      :offers, 
+      :to => :listing
 
     validates :pounds_on_hand, numericality: { greater_than_or_equal_to: 0 }, presence: true
 

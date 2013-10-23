@@ -1,0 +1,24 @@
+%h6= Spree.t(:offer_basics)
+%dl
+  %dt= Spree.t(:offering_company)
+  %dd= link_to offer.shop.name, shop_path(offer.shop)
+  %dt= Spree.t(:credibility)
+  %dd= link_to "NOT IMPLEMENTED", rating_shop_path(offer.shop)
+  %dt= Spree.t(:created_at)
+  %dd
+    = offer.created_at.to_formatted_s(:long)
+    %span= "(#{distance_of_time_in_words_to_now offer.created_at})"
+  %dt= Spree.t(:expires_on)
+  %dd
+    = offer.presentable_expires_at
+    %span= "(#{distance_of_time_in_words_to_now offer.expires_at})"
+  %dt= Spree.t(:per_pound_price)
+  %dd
+    %span.prepend $
+    = offer.usd_per_pound
+  %dt= Spree.t(:destination)
+  %dd= link_to offer.shipping_summary, "#not_implemented_faq"
+  %dt= Spree.t(:quantity)
+  %dd= link_to offer.presentable_quantity, "#not_implemented_faq"
+  %dt= Spree.t(:minimum_weight)
+  %dd= link_to offer.presentable_minimum_weight, "#not_implemented_faq"

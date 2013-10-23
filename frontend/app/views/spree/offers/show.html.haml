@@ -1,1 +1,19 @@
-%h1= "Nothing here yet"
+- if relevant_user?
+  = content_for :sidebar do
+    - if seller_user?
+      = render 'seller_actions', offer: @offer
+    - if buyer_user?
+      = render 'buyer_actions', offer: @offer
+
+.offer-show
+  - @body_id = 'offer-show'
+  .columns-twelve-omega
+    %h1= Spree.t :public_information
+    .row
+      = render 'offer_basics', offer: @offer
+    .row
+      = render 'stockpile_summary', stockpile: @offer.stockpile
+    .row
+      = render 'stockpile_pictures', stockpile: @offer.stockpile
+    .row
+      = render 'comments', offer: @offer 

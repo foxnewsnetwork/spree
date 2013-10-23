@@ -8,7 +8,7 @@
       %th= Spree.t(:buyer_credibility)
       %th= Spree.t(:price)
   %tbody
-    = render partial: "spree/stockpiles/admin_offer/offer", collection: listing.offers
+    = render partial: "spree/stockpiles/admin_offer/offer", collection: listing.latest_offers
     - if listing.offers.blank?
       %tr
         %td

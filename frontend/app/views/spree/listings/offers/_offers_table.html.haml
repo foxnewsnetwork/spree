@@ -1,0 +1,11 @@
+%table.offers-table
+  %thead
+    %tr
+      %th= link_to Spree.t(:offer_from), listing_offers_path(listing)
+      %th= link_to Spree.t(:offer_date), listing_offers_path(listing)
+      %th= link_to Spree.t(:expiration_date), listing_offers_path(listing)
+      %th= link_to Spree.t(:buyer_credibility), listing_offers_path(listing)
+      %th= link_to Spree.t(:price), listing_offers_path(listing)
+      %th= link_to Spree.t(:minimum_weight), listing_offers_path(listing)
+  %tbody
+    = render partial: 'offer_row', collection: listing.offers, as: :offer

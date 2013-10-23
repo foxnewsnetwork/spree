@@ -33,11 +33,24 @@ Spree::Core::Engine.routes.draw do
     resources :offers, only: [:create, :index], controller: 'listings/offers'
     resources :stockpiles, only: [:new, :create], controller: 'listings/stockpiles'
   end
-  resources :offers, only: [:show] do
+  resources :offers, only: [:show, :edit, :update, :destroy] do
+    member do
+      post :accept
+      get :counter
+    end
+    resources :comments, only: [:new, :create], controller: 'offers/comments' do
+      collection do
+        get :demand
+      end
+    end
     resources :addresses, only: [:create, :new], controller: 'offers/addresses'
     resources :users, only: [:create, :new], controller: 'offers/users'
   end
-  resources :shops, :only => [:show]
+  resources :shops, :only => [:show] do
+    member do
+      get :rating
+    end
+  end
 
   get '/locale/set', :to => 'locale#set'
 

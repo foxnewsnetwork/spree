@@ -2,6 +2,10 @@ class Spree::Listings::OffersController < Spree::StoreController
   rescue_from ActiveRecord::RecordNotFound, :with => :render_404
   helper 'spree/taxons'
 
+  def index
+    _listing
+  end
+
   def create
     return _address_step  if _offer.requires_destination?
     return _user_step     if _offer.requires_buyer?
@@ -31,7 +35,7 @@ class Spree::Listings::OffersController < Spree::StoreController
   end
 
   def _listing
-    Spree::Listing.find params[:listing_id]
+    @listing ||= Spree::Listing.find params[:listing_id]
   end
 
   def _offer_params

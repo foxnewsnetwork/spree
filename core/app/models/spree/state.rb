@@ -10,6 +10,10 @@ module Spree
         return find_all_by_name_or_abbr(whatever.to_s).first || find_by_id(whatever.to_i)
       end
 
+      def normalize!(whatever)
+        normalize(whatever) || find(whatever)
+      end
+
       def find_all_by_name_or_abbr(name_or_abbr)
         where('name = ? OR abbr = ?', name_or_abbr, name_or_abbr)
       end

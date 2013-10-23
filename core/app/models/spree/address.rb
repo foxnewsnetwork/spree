@@ -6,9 +6,7 @@ module Spree
     has_many :shipments
 
     validates :address1, :city, :country, presence: true
-    validates :zipcode, presence: true, if: :require_zipcode?
-
-    validate :state_validate
+    validates_with Spree::Addresses::Validator
 
     alias_attribute :first_name, :firstname
     alias_attribute :last_name, :lastname
@@ -19,17 +17,17 @@ module Spree
         a = params.to_a.filter_map do |kv|
           :state.to_s == kv.first.to_s
         end.call do |kv|
-          [:state_id, Spree::State.normalize(kv.last).id]
+          [:state_id, Spree::State.normalize!(kv.last).id]
         end.filter_map do |kv|
           :country.to_s == kv.first.to_s
         end.call do |kv|
-          [:country_id, Spree::Country.normalize(kv.last).id]
+          [:country_id, Spree::Country.normalize!(kv.last).id]
         end
         Hash[a]
       end
 
       def find_roughly_or_create_by(params)
-        find_or_create_by! roughup_params params
+        find_or_create_by roughup_params params
       end
 
       def default
@@ -97,50 +95,5 @@ module Spree
       }
     end
 
-    private
-      def require_phone?
-        true
-      end
-
-      def require_zipcode?
-        true
-      end
-
-      def state_validate
-        # Skip state validation without country (also required)
-        # or when disabled by preference
-        return if country.blank? || !Spree::Config[:address_requires_state]
-        return unless country.states_required
-
-        # ensure associated state belongs to country
-        if state.present?
-          if state.country == country
-            self.state_name = nil #not required as we have a valid state and country combo
-          else
-            if state_name.present?
-              self.state = nil
-            else
-              errors.add(:state, :invalid)
-            end
-          end
-        end
-
-        # ensure state_name belongs to country without states, or that it matches a predefined state name/abbr
-        if state_name.present?
-          if country.states.present?
-            states = country.states.find_all_by_name_or_abbr(state_name)
-
-            if states.size == 1
-              self.state = states.first
-              self.state_name = nil
-            else
-              errors.add(:state, :invalid)
-            end
-          end
-        end
-
-        # ensure at least one state field is populated
-        errors.add :state, :blank if state.blank? && state_name.blank?
-      end
   end
 end
