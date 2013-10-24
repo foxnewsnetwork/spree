@@ -71,7 +71,7 @@ module Spree
     end
 
     def accepted?
-      transaction.present?
+      transaction.present? && transaction.fresh?
     end
 
     def presentable_expires_at
