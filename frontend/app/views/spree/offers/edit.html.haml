@@ -4,4 +4,4 @@
     .row
       %h1= link_to @offer.name, offer_path(@offer)
     .row
-      = render 'offer_form', offer: @offer_edit_helper
+      = render 'offer_form', form_helper: @offer_edit_helper, key: @offer.id

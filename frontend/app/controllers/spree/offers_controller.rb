@@ -8,7 +8,7 @@ class Spree::OffersController < Spree::StoreController
   end
 
   def edit
-    _offer
+    _offer_edit_helper
   end
 
   def update
@@ -25,7 +25,7 @@ class Spree::OffersController < Spree::StoreController
 
   def _setup_flash!
     flash[:notice] = Spree.t(:update_successful) if _valid?
-    flash[:error] = Spree.t(:something_went_wrong) unless _valid?
+    flash[:error] = _offer_edit_helper.error_flash unless _valid?
   end
 
   def _valid?
@@ -33,15 +33,25 @@ class Spree::OffersController < Spree::StoreController
   end
 
   def _consider_update_offer!
-    _offer.update! _offer_edit_helper.offer_params if _valid?
+    _offer.update!(_offer_edit_helper.offer_params) if _valid?
   end
 
   def _offer_edit_helper
-    @offer_edit_helper ||= Spree::Offers::EditFormHelper.new _raw_params
+    @offer_edit_helper ||= Spree::Offers::EditFormHelper.new _offer_params
   end
 
-  def _raw_params
-    params.require(:offer).permit *Spree::Offers::ParamsProcessor::AllFields
+  def _offer_params
+    return _existing_params if "edit" == params[:action]
+    return _existing_params.merge _input_params if "update" == params[:action]
+    throw "Bad action calls for _offer_params"
+  end
+
+  def _existing_params
+    Spree::Offers::ParamsTenderizer.new(_offer).offer_params
+  end
+
+  def _input_params
+    params.require(:offer_edit_form).permit(*Spree::Offers::ParamsProcessor::AllFields).symbolize_keys
   end
 
   def _offer

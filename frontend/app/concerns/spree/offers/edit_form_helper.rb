@@ -15,11 +15,11 @@ class Spree::Offers::EditFormHelper
     presence: true,
     inclusion: { in: Spree::Offer::Terms }
 
-  attr_accessor *Spree::Offers::ParamsProcessor::AllFields
+  attr_hash_accessor *Spree::Offers::ParamsProcessor::AllFields
 
   class << self
     def model_name
-      ActiveModel::Name.new self, nil, "offer"
+      ActiveModel::Name.new self, nil, "offer_edit_form"
     end
   end
 
@@ -27,8 +27,20 @@ class Spree::Offers::EditFormHelper
     @attributes = attributes
   end
 
+  def country
+    @attributes[:country] = Spree::Country.normalize @attributes[:country]
+  end
+
+  def state
+    @attributes[:state] = Spree::State.normalize @attributes[:state]
+  end
+
   def read_attribute_for_validation(key)
     @attributes[key]
+  end
+
+  def error_flash
+    errors.full_messages.join ", "
   end
 
   def persisted?
@@ -36,7 +48,7 @@ class Spree::Offers::EditFormHelper
   end
 
   def to_key
-    _offer.to_key if persisted?
+    nil
   end
 
   def to_param

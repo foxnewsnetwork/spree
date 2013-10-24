@@ -18,6 +18,10 @@ module Spree
         where('name = ? OR abbr = ?', name_or_abbr, name_or_abbr)
       end
 
+      def select_options_arrays
+        @options_arrays ||= select("distinct name, id").map(&:select_options_array).sort
+      end
+
       def all_names
         @_everybody ||= select("distinct name").map(&:name).sort.uniq
       end
@@ -31,6 +35,10 @@ module Spree
         }
         state_info
       end
+    end
+
+    def select_options_array
+      [name, id]
     end
 
     def <=>(other)

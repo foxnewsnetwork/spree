@@ -1,5 +1,5 @@
-- offer ||= :offer
-= form_for offer, url: offer_path(offer.to_key), method: :put do |f|
+- # TODO: Fix selects getting the wrong defaults
+= form_for form_helper, url: offer_path(key), method: :put do |f|
   %fieldset
     %legend= Spree.t(:offer_basics)
     %dl
@@ -22,8 +22,10 @@
       %dt= f.label :zipcode
       %dd= f.text_field :zipcode
       %dt= f.label :country, Spree.t(:destination_country)
-      %dd= f.select :country, options_for_select(Spree::Country.all_names)
+      - ops = options_for_select(Spree::Country.select_options_arrays)
+      %dd= f.select :country, ops
       %dt= f.label :state, Spree.t(:destination_state)
-      %dd= f.select :state, options_for_select(Spree::State.all_names)
+      - ops = options_for_select(Spree::State.select_options_arrays)
+      %dd= f.select :state, ops
     .form-actions
-      = f.submit
+      = f.submit "Update"

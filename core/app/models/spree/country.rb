@@ -19,6 +19,10 @@ module Spree
         where('name = ? OR iso_name = ?', name, name)
       end
 
+      def select_options_arrays
+        @options_arrays ||= select("distinct name, id").map(&:select_options_array).sort
+      end
+
       def all_names
         @_everybody ||= select("distinct name").map(&:name).sort.uniq.unshift "United States"
       end
@@ -28,6 +32,10 @@ module Spree
         all.each { |country| states_required[country.id.to_s]= country.states_required }
         states_required
       end
+    end
+
+    def select_options_array
+      [name, id]
     end
 
     def <=>(other)
