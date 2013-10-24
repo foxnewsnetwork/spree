@@ -1,5 +1,10 @@
 module Spree
   class Offer < ActiveRecord::Base
+    class OfferTransactionValidator < ::ActiveModel::Validator
+      def validate(model)
+        model.errors.add :offer, "already accepted" if model.accepted?
+      end
+    end
     acts_as_paranoid
     FAS = "FAS"
     CNF = "CNF"
@@ -31,6 +36,9 @@ module Spree
     has_one :stockpile,
       through: :listing
 
+    has_one :transaction,
+      class_name: 'Spree::Transaction'
+
     has_many :comments
 
     validates :listing_id, presence: true
@@ -43,6 +51,7 @@ module Spree
     validates :usd_per_pound,
       presence: true,
       numericality: { greater_than: 0 }
+    validates_with OfferTransactionValidator
     before_validation :_upcase_transport_method
     delegate :name, :to => :listing
 
@@ -59,6 +68,10 @@ module Spree
 
     def total_usd
       reasonable_load_count * usd_per_pound * PoundsPerContainer
+    end
+
+    def accepted?
+      transaction.present?
     end
 
     def presentable_expires_at
