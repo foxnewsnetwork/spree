@@ -2,6 +2,7 @@ module Spree
   class Finalization < ActiveRecord::Base
     acts_as_paranoid
     belongs_to :offer
+    has_many :service_demands
     has_many :service_contacts
     has_many :serviceables,
       through: :service_contacts
