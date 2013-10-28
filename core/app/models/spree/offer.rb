@@ -36,8 +36,8 @@ module Spree
     has_one :stockpile,
       through: :listing
 
-    has_one :transaction,
-      class_name: 'Spree::Transaction'
+    has_many :finalizations,
+      class_name: 'Spree::Finalization'
 
     has_many :comments
 
@@ -70,8 +70,12 @@ module Spree
       reasonable_load_count * usd_per_pound * PoundsPerContainer
     end
 
+    def fresh_finalization
+      finalizations.fresh.order("created_at desc").first
+    end
+
     def accepted?
-      transaction.present? && transaction.fresh?
+      fresh_finalization.present?
     end
 
     def presentable_expires_at
