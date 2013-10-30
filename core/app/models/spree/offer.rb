@@ -74,6 +74,10 @@ module Spree
       finalizations.fresh.order("created_at desc").first
     end
 
+    def acceptable?
+      complete? && !accepted?
+    end
+
     def accepted?
       fresh_finalization.present?
     end

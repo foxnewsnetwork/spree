@@ -9,6 +9,10 @@ module Spree
     
     scope :fresh, -> { where "expires_at is null or expires_at > ?", Time.now }
 
+    def relevant_shops
+      [offer.buyer, offer.seller]
+    end
+
     def fresh?
       Time.now < _expiration_date
     end

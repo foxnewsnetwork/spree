@@ -1,0 +1,21 @@
+- ship = @form_helper || :serviceable
+= form_for ship, url: new_finalization_ship_demand_path(@finalization) do |f|
+  %fieldset
+    %legend= Spree.t(:ship_request)
+    %dl
+      %dt= f.label :origination_port_code
+      %dd= f.text_field :origination_port_code
+      %dt= f.label :destination_port_code
+      %dd= f.text_field :destination_port_code
+      %dt= f.label :carrier_name
+      %dd= f.text_field :carrier_name
+      %dt= f.label :depart_at
+      %dd= f.date_field :depart_at
+      %dt= f.label :arrive_at
+      %dd= f.date_field :arrive_at
+      %dt= f.label :cutoff_at
+      %dd= f.date_field :cutoff_at
+      %dt= f.label :usd_price
+      %dd= f.numeric_field :usd_price
+    .form-action
+      = f.submit

@@ -19,6 +19,10 @@ Spree::Core::Engine.routes.draw do
       passwords: 'spree/users/devise/passwords'
     }
   
+  resources :finalizations, only: [:show] do
+    resources :ship_demands, only: [:new, :create], controller: 'finalizations/serviceables/ship'
+  end
+  resources :demands, only: [:show]
   resources :products
   resources :stockpiles do
     member do
@@ -34,8 +38,8 @@ Spree::Core::Engine.routes.draw do
     resources :stockpiles, only: [:new, :create], controller: 'listings/stockpiles'
   end
   resources :offers, only: [:show, :edit, :update, :destroy] do
+    resources :finalizations, only: [:new, :create]
     member do
-      post :accept
       get :counter
     end
     resources :comments, only: [:new, :create], controller: 'offers/comments' do

@@ -7,7 +7,7 @@ module Spree::UserFilterHelper
   end
 
   def filter_incorrect_users
-    unless user_signed_in? && current_shop == _correct_shop
+    unless user_signed_in? && _correct_shops.include?(current_shop)
       redirect_to root_path
       flash[:error] = Spree.t(:sorry_you_are_not_the_right_user)
     end
@@ -15,6 +15,12 @@ module Spree::UserFilterHelper
 
   def current_shop
     current_user.try :shop
+  end
+
+  private
+
+  def _correct_shops
+    [_correct_shop].reject(&:blank?)
   end
 
 end
