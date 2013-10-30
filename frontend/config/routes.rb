@@ -48,7 +48,6 @@ Spree::Core::Engine.routes.draw do
       end
     end
     resources :addresses, only: [:create, :new], controller: 'offers/addresses'
-    resources :users, only: [:create, :new], controller: 'offers/users'
   end
   resources :shops, :only => [:show] do
     member do
