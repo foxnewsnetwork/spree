@@ -1,8 +1,10 @@
 class Spree::Finalizations::Serviceables::Ships::FormHelper
   include ActiveModel::Validations
   Fields = [
-    :origination_port_code,
-    :destination_port_code,
+    :start_port,
+    :start_terminal_code,
+    :finish_port,
+    :finish_terminal_code,
     :carrier_name,
     :depart_at,
     :arrive_at,
@@ -41,6 +43,8 @@ class Spree::Finalizations::Serviceables::Ships::FormHelper
   end
 
   def ship_serviceable_params
-    @attributes
+    @attributes.access_map!(:start_port, :finish_port) do |port_code|
+      Spree::Seaport.find_by_port_code! port_code
+    end
   end
 end
