@@ -50,9 +50,11 @@ Spree::Core::Engine.routes.draw do
     resources :addresses, only: [:create, :new], controller: 'offers/addresses'
   end
   resources :shops, :only => [:show] do
-    member do
-      get :rating
-    end
+    resources :ratings, only: [:index]
+    resources :listings, only: [:index]
+    resources :offers, only: [:index]
+    resources :finalizations, only: [:index]
+    resources :serviceables, only: [:index]
   end
 
   get '/locale/set', :to => 'locale#set'

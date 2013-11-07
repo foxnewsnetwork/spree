@@ -7,7 +7,8 @@ module Spree
     has_many :serviceables,
       through: :service_contacts
     
-    scope :fresh, -> { where "expires_at is null or expires_at > ?", Time.now }
+    scope :fresh, 
+      -> { where "#{self.table_name}.expires_at is null or #{self.table_name}.expires_at > ?", Time.now }
 
     def relevant_shops
       [offer.buyer, offer.seller]

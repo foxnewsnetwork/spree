@@ -21,7 +21,11 @@ module Spree
     delegate :name,
       :pounds_on_hand,
       :require_address?, 
-      :to => :stockpile
+      to: :stockpile
+
+    def latest_offer
+      offers.order("created_at desc").first
+    end
 
     def owner
       shop.user
