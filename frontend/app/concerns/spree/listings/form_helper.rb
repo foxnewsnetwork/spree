@@ -1,23 +1,15 @@
 class Spree::Listings::FormHelper
-  class MaterialValidator < ActiveModel::Validator
-    def validate(model)
-      if Spree::Material.find_by_id(model.read_attribute_for_validation :material).blank?
-        model.errors.add :material, "#{model.read_attribute_for_validation :material} doesn't exist"
-      end
+  include ActiveModel::Validations
+  class << self
+    def model_name
+      ActiveModel::Name.new self, nil, "listing"
     end
   end
-  include ActiveModel::Validations
-  attr_accessor :material,
-    :origin_products,
-    :pounds_on_hand,
-    :packaging,
-    :process_state,
-    :available_on,
-    :expires_on,
-    :notes
-  validates_presence_of :material, :origin_products
+  attr_hash_accessor *Spree::Listings::StockpileParamsProcessor::Fields
+  validates_presence_of :material, :origin_products, :address1, :city, :country
   validates :pounds_on_hand, numericality: { greater_than: 0, only_integer: true }, presence: true
-  validates_with MaterialValidator
+  validates_with Spree::Listings::MaterialValidator
+  validates_with Spree::Listings::GeographicValidator
 
   def flash_message
     _handler.flash_message
@@ -25,10 +17,6 @@ class Spree::Listings::FormHelper
 
   def initialize(attributes={})
     @attributes = attributes
-  end
-
-  def read_attribute_for_validation(key)
-    @attributes[key]
   end
 
   def persisted?
@@ -43,8 +31,8 @@ class Spree::Listings::FormHelper
     nil
   end
 
-  def stockpile_params
-    Spree::Listings::StockpileParamsProcessor.new(@attributes).stockpile_params
+  def listing_params
+    Spree::Listings::StockpileParamsProcessor.new(@attributes).listing_params
   end
 
   def to_key

@@ -1,7 +1,7 @@
 - listing ||= :listing_form_helper
 = form_for listing, url: listings_path, builder: Spree::FormBuilder do |f|
   %fieldset.listing-form
-    %legend= Spree.t(:new_listing)
+    %legend= Spree.t(:listing_data)
     %dl
       %dt= f.label :material, Spree.t(:plastic_category)
       %dd= f.select :material, Spree::Material.all_as_options_array
@@ -22,5 +22,23 @@
       %dd= f.date_field :expires_on
       %dt= f.label :notes
       %dd= f.text_area :notes
+  %fieldset.listing-form
+    %legend= Spree.t(:listing_location)
+    %dl
+      %dt= f.label :address1, Spree.t(:street_address)
+      %dd= f.text_field :address1
+      %dt= f.label :address2, Spree.t(:secondary_address)
+      %dd= f.text_field :address2
+      %dt= f.label :city, Spree.t(:city)
+      %dd= f.text_field :city
+      %dt= f.label :zipcode
+      %dd= f.text_field :zipcode
+      %dt= f.label :state
+      %dd= f.select :state, options_for_select(Spree::State.all_names)
+      %dt= f.label :country
+      %dd= f.select :country, options_for_select(Spree::Country.all_names)
+  %fieldset.form-actions
+    %legend= Spree.t(:form_actions)
     .form-actions
-      = f.submit value: "Next"
+      = f.submit value: "Create"
+      
