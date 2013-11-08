@@ -7,6 +7,7 @@ module Spree
     has_many :serviceables,
       through: :service_contacts
     
+    has_many :ratings, as: :reviewable    
     scope :fresh, 
       -> { where "#{self.table_name}.expires_at is null or #{self.table_name}.expires_at > ?", Time.now }
 
