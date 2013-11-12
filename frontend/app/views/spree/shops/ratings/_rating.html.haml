@@ -1,0 +1,14 @@
+%li.rating-row.row.bottom-wall
+  .columns.four.alpha
+    .reviewer-name= link_to rating.reviewer.name, shop_path(rating.reviewer)
+    .transaction-name= rating.reviewable.created_at.to_formatted_s(:db)
+  .columns.twelve.omega
+    .stars-row
+      = render 'spree/shared/ratings/stars/five', stars: rating.stars.ceil
+      = link_to rating_path(rating) do
+        = "#{rating.score.ceil} / #{Spree::Rating.max_possible_score}"
+    .notes-row
+      = rating.notes
+    .dates-row
+      = "--"
+      = rating.created_at.to_formatted_s(:long)

@@ -3,7 +3,7 @@
   %dt= Spree.t(:offering_company)
   %dd= link_to offer.shop.name, shop_path(offer.shop)
   %dt= Spree.t(:credibility)
-  %dd= link_to "NOT IMPLEMENTED", rating_shop_path(offer.shop)
+  %dd= render partial: 'spree/shared/ratings/stars', locals: { shop: offer.buyer }
   %dt= Spree.t(:created_at)
   %dd
     = offer.created_at.to_formatted_s(:long)

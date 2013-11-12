@@ -36,6 +36,20 @@ module SpreeSample
       Spree::Sample.load_sample("offers")
       Spree::Sample.load_sample("comments")
       Spree::Sample.load_sample("seaports")
+
+      Spree::Sample.load_sample("finalizations")
+      Spree::Sample.load_sample("post_transactions")
+      Spree::Sample.load_sample("trucks")
+      Spree::Sample.load_sample("ships")
+      Spree::Sample.load_sample("escrows")
+      Spree::Sample.load_sample("inspections")
+      Spree::Sample.load_sample("service_contracts")
+      Spree::Sample.load_sample("service_demands")
+      Spree::Sample.load_sample("service_supplies")
+      Spree::Sample.load_sample("ratings")
+      Spree::Sample.load_sample("dispute_negotiations")
+      
+
     end
   end
 end

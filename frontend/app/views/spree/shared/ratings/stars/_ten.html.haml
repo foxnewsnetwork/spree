@@ -1,0 +1,7 @@
+%span.rating-stars
+  - stars ||= 0
+  - blank_stars = 10 - stars
+  - stars.ceil.times do
+    %a.black-star ★
+  - blank_stars.times do
+    %a.star ☆

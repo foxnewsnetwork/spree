@@ -1,0 +1,10 @@
+.stockpile-show
+  - @body_id = 'shop-rating-index'
+  .columns.sixteen.alpha
+    .row
+      = render 'spree/shops/ratings/rating_summary', shop: @shop
+
+    .row
+      %h6= Spree.t(:ratings)
+      %ul.ratings
+        = render partial: 'spree/shops/ratings/rating', collection: @shop.received_ratings

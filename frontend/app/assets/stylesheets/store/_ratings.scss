@@ -1,0 +1,17 @@
+.rating-stars > .star { 
+  width: 1.1em;
+  font-size: 30px;
+}
+.rating-stars > .black-star { 
+  color:rgba(244,199,77,1);
+  font-size: 30px;
+}
+
+ul.ratings {
+  list-style: none;
+
+  .bottom-wall {
+    padding-bottom: 10px;
+    border-bottom: $default_border;
+  }
+}

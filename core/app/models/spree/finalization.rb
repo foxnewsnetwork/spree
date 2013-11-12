@@ -6,6 +6,10 @@ module Spree
     has_many :service_contacts
     has_many :serviceables,
       through: :service_contacts
+
+    delegate :destination,
+      :origination,
+      to: :offer
     
     has_many :ratings, as: :reviewable    
     scope :fresh, 

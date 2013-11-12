@@ -14,7 +14,7 @@ class Spree::Addresses::Validator < ActiveModel::Validator
 
     # ensure associated state belongs to country
     if model.state.present?
-      if model.state.country == country
+      if model.state.country == model.country
         model.state_name = nil #not required as we have a valid state and country combo
       else
         if model.state_name.present?

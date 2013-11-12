@@ -1,0 +1,5 @@
+- if shop.rating_stars.zero?
+  = Spree.t(:no_ratings_yet)
+- else
+  = render partial: 'spree/shared/ratings/stars/five', locals: { stars: shop.rating_stars }
+  = link_to "#{shop.rating_score} / #{Spree::Rating.max_possible_score}", shop_ratings_path(shop)
