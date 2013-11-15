@@ -41,6 +41,10 @@ module Spree
     #   new_record? || (shipments.empty? && checkouts.empty?)
     # end
 
+    def inspect
+      [address1, address2, city, state.try(:name), country.iso].reject(&:blank?).map(&:upcase).join " "
+    end
+
     def permalink_name
       "#{state.try(:name) || country.iso} - #{city}".strip.downcase
     end

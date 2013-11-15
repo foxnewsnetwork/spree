@@ -3,25 +3,15 @@
     %nav.user-command-panel
       %h6= Spree.t(:your_command_panel)
       %ul
-        %li= link_to Spree.t(:ratings), shop_ratings_path(current_shop)
-        %li= link_to Spree.t(:listings), shop_listings_path(current_shop)
-        %li= link_to Spree.t(:offers), shop_offers_path(current_shop)
-        %li= link_to Spree.t(:accepted_offers), shop_finalizations_path(current_shop)
-        %li= link_to Spree.t(:services), shop_serviceables_path(current_shop)
-        %li= link_to Spree.t(:preferences), "#not_implemented" 
+        %li= link_to Spree.t(:preferences), user_preferences_path(current_user)
+        %li= link_to Spree.t(:your_shops), shop_path(current_shop)
 
 .user-show
   - @body_id = "user-details"
   .columns.ten.omega
     .row
-      .rating-summary
-        %h1= Spree.t(:rating_summary)
-        .description= Spree.t(:not_implemented)
+      = render 'summary', user: @user
     .row
-      = render 'listing_summary', shop: current_shop
+      = render 'spree/users/summaries/shops', user: @user
     .row
-      = render 'offer_summary', shop: current_shop
-    .row
-      = render 'finalization_summary', shop: current_shop
-    .row
-      = render 'serviceable_summary', shop: current_shop
+      = render 'spree/users/summaries/preferences', user: @user

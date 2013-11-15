@@ -1,0 +1,9 @@
+.rating-summary
+  %h1= link_to Spree.t(:received_rating_summary), shop_ratings_path(shop)
+  %h6= Spree.t(:you_have_received_no_ratings) if shop.received_ratings.blank?
+  %ul.ratings
+    = render partial: 'spree/shops/ratings/rating', collection: shop.latest_received_ratings
+  %h1= link_to Spree.t(:given_rating_summary), shop_ratings_path(shop)
+  %h6= Spree.t(:you_have_given_no_ratings) if shop.given_ratings.blank?
+  %ul.ratings
+    = render partial: 'spree/shops/ratings/rating', collection: shop.latest_given_ratings

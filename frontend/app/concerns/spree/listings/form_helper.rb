@@ -31,13 +31,14 @@ class Spree::Listings::FormHelper
     nil
   end
 
+  def to_key
+    nil
+  end
+  
   def listing_params
     Spree::Listings::StockpileParamsProcessor.new(@attributes).listing_params
   end
 
-  def to_key
-    nil
-  end
 
   private
 

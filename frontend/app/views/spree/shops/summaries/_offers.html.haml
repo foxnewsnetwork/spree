@@ -1,0 +1,6 @@
+.offer-summary
+  %h1= Spree.t(:offer_summary)
+  %h6= Spree.t(:latest_offers)
+  %h6= Spree.t(:you_have_no_offers) if shop.top_offers(5).blank?
+  %ul.offers
+    = render partial: 'spree/shops/summaries/offers/offer', collection: shop.top_offers(5)

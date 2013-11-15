@@ -1,6 +1,6 @@
 %li.rating-row.row.bottom-wall
   .columns.four.alpha
-    .reviewer-name= link_to rating.reviewer.name, shop_path(rating.reviewer)
+    .reviewed-name= link_to rating.reviewed.name, shop_path(rating.reviewed)
     .transaction-name= rating.reviewable.created_at.to_formatted_s(:db)
   .columns.twelve.omega
     .stars-row
@@ -8,7 +8,8 @@
       = link_to rating_path(rating) do
         = "#{rating.score.ceil} / #{Spree::Rating.max_possible_score}"
     .notes-row
-      = rating.notes
+      = link_to rating.notes, rating_path(rating)
     .dates-row
       = "--"
+      = link_to rating.reviewer.name, shop_path(rating.reviewer)
       = rating.created_at.to_formatted_s(:long)

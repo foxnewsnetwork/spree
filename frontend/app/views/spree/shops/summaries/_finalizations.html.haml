@@ -1,0 +1,6 @@
+.finalization-summary
+  %h1= Spree.t(:finalization_summary)
+  %h6= Spree.t(:latest_finalizations)
+  %h6= Spree.t(:you_have_no_finalizations) if shop.top_finalizations(5).blank?
+  %ul.finalizations
+    = render partial: 'spree/shops/summaries/finalizations/finalization', collection: shop.top_finalizations(5)

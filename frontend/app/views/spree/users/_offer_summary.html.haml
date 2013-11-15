@@ -1,6 +1,0 @@
-.offer-summary
-  %h1= Spree.t(:offer_summary)
-  %h6= Spree.t(:latest_offers)
-  %ul.offers
-    = render partial: 'spree/users/offer_summary/offer', collection: shop.top_offers(5)
-    %h6= Spree.t(:you_have_no_offers) if shop.top_offers(5).blank?

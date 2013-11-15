@@ -1,18 +1,45 @@
-%h1= Spree.t(:rating_summary)
-%dl
-  %dt= Spree.t :summary
-  %dd
-    = render 'spree/shared/ratings/stars/hundred', stars: shop.rating_summary_score
-    = "#{shop.rating_summary_score.ceil} / 100"
-  %dt= Spree.t :trustworthiness
-  %dd
-    = render 'spree/shared/ratings/stars/hundred', stars: shop.rating_trustworthiness_score
-    = "#{shop.rating_trustworthiness_score.ceil} / 100"
-  %dt= Spree.t :simplicity
-  %dd
-    = render 'spree/shared/ratings/stars/hundred', stars: shop.rating_simplicity_score
-    = "#{shop.rating_simplicity_score.ceil} / 100"
-  %dt= Spree.t :agreeability
-  %dd
-    = render 'spree/shared/ratings/stars/hundred', stars: shop.rating_agreeability_score
-    = "#{shop.rating_agreeability_score.ceil} / 100"
+.columns.eight.alpha
+  %h1= Spree.t(:received_rating_summary)
+  - if shop.rating_summary_score.blank?
+    %h6= Spree.t :you_have_received_no_ratings
+  - else
+    %dl
+      %dt= Spree.t :summary
+      %dd
+        = render 'spree/shared/ratings/stars/five', stars: shop.rating_summary_score
+        = "#{shop.rating_summary_score.try :ceil} / 100"
+      %dt= Spree.t :trustworthiness
+      %dd
+        = render 'spree/shared/ratings/stars/five', stars: shop.rating_trustworthiness_score
+        = "#{shop.rating_trustworthiness_score.try :ceil} / 100"
+      %dt= Spree.t :simplicity
+      %dd
+        = render 'spree/shared/ratings/stars/five', stars: shop.rating_simplicity_score
+        = "#{shop.rating_simplicity_score.try :ceil} / 100"
+      %dt= Spree.t :agreeability
+      %dd
+        = render 'spree/shared/ratings/stars/five', stars: shop.rating_agreeability_score
+        = "#{shop.rating_agreeability_score.try :ceil} / 100"
+
+.columns.eight.omega
+  %h1= Spree.t(:given_rating_summary)
+  - if shop.given_summary_score.blank?
+    %h6= Spree.t :you_have_given_no_ratings
+  - else
+    %dl
+      %dt= Spree.t :summary
+      %dd
+        = render 'spree/shared/ratings/stars/five', stars: shop.given_summary_score
+        = "#{shop.given_summary_score.try :ceil} / 100"
+      %dt= Spree.t :trustworthiness
+      %dd
+        = render 'spree/shared/ratings/stars/five', stars: shop.given_trustworthiness_score
+        = "#{shop.given_trustworthiness_score.try :ceil} / 100"
+      %dt= Spree.t :simplicity
+      %dd
+        = render 'spree/shared/ratings/stars/five', stars: shop.given_simplicity_score
+        = "#{shop.given_simplicity_score.try :ceil} / 100"
+      %dt= Spree.t :agreeability
+      %dd
+        = render 'spree/shared/ratings/stars/five', stars: shop.given_agreeability_score
+        = "#{shop.given_agreeability_score.try :ceil} / 100"

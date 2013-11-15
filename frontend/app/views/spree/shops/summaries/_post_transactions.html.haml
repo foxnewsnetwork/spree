@@ -1,0 +1,6 @@
+.post-transaction-summary
+  %h1= Spree.t(:post_transaction_summary)
+  %h6= Spree.t(:latest_post_transactions)
+  %h6= Spree.t(:you_have_no_post_transactions) if shop.top_post_transactions(5).blank?
+  %ul.post-transactions
+    = render partial: 'spree/shops/summaries/post_transactions/post_transaction', collection: shop.top_post_transactions(5)

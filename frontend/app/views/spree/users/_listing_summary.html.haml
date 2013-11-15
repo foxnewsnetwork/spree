@@ -1,6 +1,0 @@
-.listing-summary
-  %h1= Spree.t(:listing_summary)
-  %h6= Spree.t(:listings_with_most_recent_activity)
-  %ul.listings
-    = render partial: 'spree/users/listing_summary/listing', collection: shop.top_listings(5)
-    %h6= Spree.t(:you_have_no_listings) if shop.top_listings(5).blank?

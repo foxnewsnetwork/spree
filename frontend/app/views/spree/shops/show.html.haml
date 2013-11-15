@@ -1,15 +1,30 @@
-- if @shop.user == current_user
+- if @shop == current_shop
   = content_for :sidebar do
     %nav.shop-panel
       %h6= Spree.t(:your_shop_panel)
       %ul
-        %li= "#edit"
-        %li= "#accouting"
+        %li= link_to Spree.t(:ratings), shop_ratings_path(current_shop)
+        %li= link_to Spree.t(:listings), shop_listings_path(current_shop)
+        %li= link_to Spree.t(:offers), shop_offers_path(current_shop)
+        %li= link_to Spree.t(:accepted_offers), shop_finalizations_path(current_shop)
+        %li= link_to Spree.t(:services), shop_serviceables_path(current_shop)
+        %li= link_to Spree.t(:post_transaction_offers), shop_post_transactions_path(current_shop)
 
 
 .shop-show
   - @body_id = "shop-details"
   .columns.ten.omega
     .row
-      = @shop.email
-      %p= @shop.user.email
+      = render 'spree/shops/summary', shop: @shop
+    .row
+      = render 'spree/shops/summaries/ratings', shop: @shop
+    .row
+      = render 'spree/shops/summaries/listings', shop: @shop
+    .row
+      = render 'spree/shops/summaries/offers', shop: @shop
+    .row
+      = render 'spree/shops/summaries/finalizations', shop: @shop
+    .row
+      = render 'spree/shops/summaries/serviceables', shop: @shop
+    .row
+      = render 'spree/shops/summaries/post_transactions', shop: @shop

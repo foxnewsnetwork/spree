@@ -4,6 +4,8 @@ class Spree::Preference < ActiveRecord::Base
   validates :key, presence: true
   validates :value_type, presence: true
 
+  belongs_to :user
+
   scope :valid, -> { where(Spree::Preference.arel_table[:key].not_eq(nil)).where(Spree::Preference.arel_table[:value_type].not_eq(nil)) }
 
   # The type conversions here should match

@@ -17,6 +17,9 @@ module Spree
     has_one :shop, class_name: 'Spree::Shop'
     has_many :listings, through: :shop
 
+    has_many :preferences,
+      dependent: :destroy
+
     roles_table_name = Role.table_name
     scope :registered, -> { where("#{users_table_name}.email NOT LIKE ?", "%@example.net") }
 

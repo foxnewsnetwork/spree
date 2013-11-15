@@ -1,5 +1,7 @@
 %span.rating-stars
   - stars ||= 0
+  - stars = stars.ceil
+  - stars = 5 * stars / Spree::Rating.max_possible_score if stars > 5
   - blank_stars = 5 - stars
   - stars.times do
     %a.black-star ★

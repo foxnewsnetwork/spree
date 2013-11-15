@@ -1,0 +1,6 @@
+.serviceable-summary
+  %h1= Spree.t(:serviceable_summary)
+  %h6= Spree.t(:latest_serviceables)
+  %h6= Spree.t(:you_have_no_serviceables) if shop.top_serviceables(5).blank?
+  %ul.serviceables
+    = render partial: 'spree/shops/summaries/serviceables/serviceable', collection: shop.top_serviceables(5)

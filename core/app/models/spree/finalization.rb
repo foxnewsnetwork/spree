@@ -2,6 +2,8 @@ module Spree
   class Finalization < ActiveRecord::Base
     acts_as_paranoid
     belongs_to :offer
+    has_one :post_transaction,
+      class_name: 'Spree::PostTransaction'
     has_many :service_demands
     has_many :service_contacts
     has_many :serviceables,
@@ -9,6 +11,8 @@ module Spree
 
     delegate :destination,
       :origination,
+      :buyer,
+      :seller,
       to: :offer
     
     has_many :ratings, as: :reviewable    
@@ -21,6 +25,10 @@ module Spree
 
     def fresh?
       Time.now < _expiration_date
+    end
+
+    def shitty?
+      post_transaction.present? && post_transaction.unresolved?
     end
 
     private

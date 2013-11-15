@@ -7,10 +7,12 @@ module Spree
     has_many :offers, class_name: 'Spree::Offer'
     has_many :finalizations,
       through: :offers
+    has_many :post_transactions,
+      through: :finalizations
+
     has_many :service_supplies
-    has_many :service_contacts
-    has_many :serviceables,
-      through: :service_contacts
+    has_many :service_contracts,
+      class_name: 'Spree::ServiceContract'
 
     has_many :received_ratings,
       class_name: 'Spree::Rating',
@@ -26,6 +28,22 @@ module Spree
       end.take n
     end
 
+    def latest_received_ratings(n=3) 
+      received_ratings.order('created_at desc').limit n
+    end
+
+    def latest_given_ratings(n=3) 
+      given_ratings.order('created_at desc').limit n
+    end
+
+    def top_serviceables(n=5)
+      service_contracts.limit(n).map(&:serviceable)
+    end
+
+    def top_post_transactions(n=5)
+      post_transactions.limit n
+    end
+
     def top_offers(n=5)
       offers.order("created_at desc").limit 5
     end
@@ -35,11 +53,11 @@ module Spree
     end
 
     def rating_stars
-      received_average_stars.ceil
+      received_average_stars.try :ceil
     end
 
     def rating_score
-      _averge_something { |rating| rating.score }
+      _averge_something_on_received { |rating| rating.score }
     end
     alias_method :rating_summary_score, :rating_score
 
@@ -48,30 +66,68 @@ module Spree
     end
 
     def received_average_stars
-      _averge_something { |rating| rating.stars }
+      _averge_something_on_received { |rating| rating.stars }
     end
 
     def rating_trustworthiness_score 
-      _averge_something { |rating| rating.trustworthiness }
+      _averge_something_on_received { |rating| rating.trustworthiness }
     end
 
     def rating_simplicity_score 
-      _averge_something { |rating| rating.simplicity }
+      _averge_something_on_received { |rating| rating.simplicity }
     end
 
     def rating_agreeability_score 
-      _averge_something { |rating| rating.agreeability }
+      _averge_something_on_received { |rating| rating.agreeability }
+    end
+
+    def given_stars
+      received_average_stars.try :ceil
+    end
+
+    def given_score
+      _average_something_on_given { |rating| rating.score }
+    end
+    alias_method :given_summary_score, :given_score
+
+    def given_percentage
+      given_average_stars.to_f / Spree::Rating.max_possible_stars
+    end
+
+    def given_average_stars
+      _average_something_on_given { |rating| rating.stars }
+    end
+
+    def given_trustworthiness_score 
+      _average_something_on_given { |rating| rating.trustworthiness }
+    end
+
+    def given_simplicity_score 
+      _average_something_on_given { |rating| rating.simplicity }
+    end
+
+    def given_agreeability_score 
+      _average_something_on_given { |rating| rating.agreeability }
     end
 
 
     private
 
-    def _averge_something(n=nil, &block)
+    def _averge_something_on_received(n=nil, &block)
       return if received_ratings.blank?
       n ||= received_ratings.count
       return yield(received_ratings.first) if 0 >= n
-      _averge_something(n-1, &block) * ( 1 - 1.0 / n) + yield(received_ratings[n-1]) / n.to_f
+      _averge_something_on_received(n-1, &block) * ( 1 - 1.0 / n) + yield(received_ratings[n-1]) / n.to_f
     end
+
+    def _average_something_on_given(n=nil, &block)
+      return if given_ratings.blank?
+      n ||= given_ratings.count
+      return yield(given_ratings.first) if 0 >= n
+      _average_something_on_given(n-1, &block) * ( 1 - 1.0 / n) + yield(given_ratings[n-1]) / n.to_f
+    end
+
+
 
   end
 end

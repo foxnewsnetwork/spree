@@ -1,0 +1,8 @@
+%h1.shop-summary= Spree.t(:general_summary)
+%dl
+  %dt= Spree.t(:company_name)
+  %dd= h shop.name
+  %dt= Spree.t(:contact_email)
+  %dd= h shop.email
+  %dt= Spree.t(:company_address)
+  %dd= shop.address.inspect

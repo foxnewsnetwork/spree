@@ -1,10 +1,16 @@
 .stockpile-show
   - @body_id = 'shop-rating-index'
   .columns.sixteen.alpha
+    .row= link_to Spree.t(:back), shop_path(@shop)
     .row
       = render 'spree/shops/ratings/rating_summary', shop: @shop
 
     .row
-      %h6= Spree.t(:ratings)
+      %h6= Spree.t(:received_ratings)
       %ul.ratings
         = render partial: 'spree/shops/ratings/rating', collection: @shop.received_ratings
+
+    .row
+      %h6= Spree.t(:given_ratings)
+      %ul.ratings
+        = render partial: 'spree/shops/ratings/rating', collection: @shop.given_ratings

@@ -2,7 +2,9 @@ Spree::Core::Engine.routes.draw do
 
   root :to => 'home#index'
 
-  resources :users, :only => [:show]
+  resources :users, only: [:show] do
+    resources :preferences, only: [:index]
+  end
 
   devise_scope :users do
     get '/login' => 'users/sessions#new', :as => :login
@@ -20,7 +22,15 @@ Spree::Core::Engine.routes.draw do
     }
   
   resources :finalizations, only: [:show] do
-    resources :ship_demands, only: [:new, :create], controller: 'finalizations/serviceables/ship'
+    resources :ship_demands, 
+      only: [:new, :create], 
+      controller: 'finalizations/serviceables/ship'
+    resources :post_transactions, 
+      only: [:new, :create], 
+      controller: 'finalizations/post_transactions'
+  end
+  resources :post_transactions, only: [:show] do
+    resources :dispute_negotiations, only: [:index, :create, :new]
   end
   resources :demands, only: [:show]
   resources :products
@@ -55,6 +65,7 @@ Spree::Core::Engine.routes.draw do
     resources :offers, only: [:index], controller: 'shops/offers'
     resources :finalizations, only: [:index], controller: 'shops/finalizations'
     resources :serviceables, only: [:index], controller: 'shops/serviceables'
+    resources :post_transactions, only: [:index], controller: 'shops/post_transactions'
   end
   resources :ratings, only: [:show]
 
